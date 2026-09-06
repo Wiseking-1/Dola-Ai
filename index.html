@@ -8,16 +8,6 @@
     </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    <!-- ================================================================
-    FIREBASE SDK (CDN / COMPAT v12.18.0)
-    ================================================================ -->
-    <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-app-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-auth-compat.js">
-    </script>
-    <script src="https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore-compat.js">
-    </script>
-
     <style>
         /* ===== Royal Theme ===== */
         :root {
@@ -40,6 +30,24 @@
             --memory-blue: #60a5fa;
             --sidebar-width: 280px;
         }
+
+        /* Light theme overrides */
+        body.light-theme {
+            --bg-gradient-start: #f3f4f6;
+            --bg-gradient-end: #e5e7eb;
+            --surface: rgba(255, 255, 255, 0.92);
+            --surface-alt: rgba(0, 0, 0, 0.04);
+            --surface-hover: rgba(0, 0, 0, 0.06);
+            --text-main: #1f2937;
+            --text-light: #4b5563;
+            --text-muted: #9ca3af;
+            --border: rgba(0, 0, 0, 0.1);
+            --ai-bubble: rgba(0, 0, 0, 0.05);
+            --ai-text: #1f2937;
+            --user-bubble: #ec4899;
+            --user-text: #ffffff;
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -54,6 +62,7 @@
             min-height: 100vh;
             height: 100vh;
             overflow: hidden;
+            transition: background 0.3s, color 0.3s;
         }
         .app-layout {
             display: flex;
@@ -307,102 +316,39 @@
             padding: 30px 10px;
             line-height: 1.6;
         }
+
+        /* ===== Bottom Profile Section (Gemini style) ===== */
         .sidebar-bottom {
             border-top: 1px solid var(--border);
             padding: 8px 12px 12px;
             flex-shrink: 0;
         }
-        .advanced-toggle {
+        .profile-section {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 8px 10px;
+            gap: 10px;
+            padding: 6px 8px;
             border-radius: 8px;
             cursor: pointer;
-            transition: 0.2s;
-            color: var(--text-light);
-            font-size: 0.8rem;
-            font-weight: 500;
-            border: none;
-            background: transparent;
-            width: 100%;
-            text-align: left;
+            transition: 0.15s;
             margin-bottom: 4px;
         }
-        .advanced-toggle:hover {
-            background: var(--surface-hover);
-            color: var(--text-main);
-        }
-        .advanced-toggle i {
-            transition: transform 0.3s;
-        }
-        .advanced-toggle.open i {
-            transform: rotate(90deg);
-        }
-        .advanced-content {
-            overflow: hidden;
-            max-height: 0;
-            transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.25s ease;
-            opacity: 0;
-        }
-        .advanced-content.open {
-            max-height: 300px;
-            opacity: 1;
-        }
-        .advanced-content .adv-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 7px 12px 7px 36px;
-            border-radius: 6px;
-            border: none;
-            background: transparent;
-            color: var(--text-light);
-            font-size: 0.82rem;
-            cursor: pointer;
-            width: 100%;
-            text-align: left;
-            transition: 0.15s;
-        }
-        .advanced-content .adv-btn:hover {
-            background: var(--surface-hover);
-            color: var(--text-main);
-        }
-        .advanced-content .adv-btn .badge-count {
-            font-size: 0.6rem;
-            background: rgba(236, 72, 153, 0.12);
-            color: var(--accent);
-            padding: 1px 8px;
-            border-radius: 12px;
-            margin-left: auto;
-        }
-        .profile-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.15s;
-            margin-top: 4px;
-        }
-        .profile-row:hover {
+        .profile-section:hover {
             background: var(--surface-hover);
         }
         .profile-avatar {
             width: 32px;
             height: 32px;
             border-radius: 50%;
+            flex-shrink: 0;
+            overflow: hidden;
             background: var(--accent);
-            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 13px;
-            flex-shrink: 0;
-            overflow: hidden;
+            font-size: 18px;
+            color: white;
+            cursor: pointer;
         }
         .profile-avatar img {
             width: 100%;
@@ -425,54 +371,19 @@
             font-size: 0.7rem;
             color: var(--text-muted);
         }
-        .bottom-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            margin-top: 6px;
-        }
-        .bottom-action-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 7px 10px;
-            border-radius: 6px;
-            border: none;
+        .settings-gear {
             background: transparent;
+            border: none;
             color: var(--text-light);
-            font-size: 0.82rem;
+            font-size: 1.1rem;
             cursor: pointer;
-            width: 100%;
-            text-align: left;
+            padding: 6px;
+            border-radius: 50%;
             transition: 0.15s;
         }
-        .bottom-action-btn:hover {
+        .settings-gear:hover {
             background: var(--surface-hover);
             color: var(--text-main);
-        }
-        .bottom-action-btn.danger {
-            color: #f87171;
-        }
-        .bottom-action-btn.danger:hover {
-            background: rgba(248, 113, 113, 0.08);
-        }
-        .auth-btn-sidebar {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 10px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.04);
-            color: var(--text-light);
-            cursor: pointer;
-            width: 100%;
-            transition: 0.2s;
-            font-size: 0.85rem;
-            margin-bottom: 8px;
-        }
-        .auth-btn-sidebar:hover {
-            background: var(--surface-hover);
         }
 
         /* ===== MAIN AREA ===== */
@@ -863,6 +774,7 @@
             color: var(--lock-gold);
         }
 
+        /* ===== Animated Thinking Indicator ===== */
         .typing-row {
             display: flex;
             gap: 12px;
@@ -873,6 +785,26 @@
             border-radius: 20px 20px 20px 4px;
             padding: 14px 18px;
             border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .crown-spin {
+            animation: spinCrown 1.2s infinite linear;
+            font-size: 24px;
+            color: var(--accent);
+        }
+        @keyframes spinCrown {
+            0% { transform: rotate(0deg) scale(1); }
+            50% { transform: rotate(180deg) scale(1.2); }
+            100% { transform: rotate(360deg) scale(1); }
+        }
+        .thinking-text {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-light);
+            font-size: 0.95rem;
         }
         .typing-dots span {
             display: inline-block;
@@ -1051,9 +983,9 @@
             background: #1e1b2e;
             border: 1px solid var(--border);
             border-radius: 16px;
-            max-width: 480px;
+            max-width: 520px;
             width: 100%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
             padding: 24px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
@@ -1293,6 +1225,47 @@
             margin-bottom: 12px;
         }
 
+        /* Toggle switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.3s;
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked+.slider {
+            background-color: var(--accent);
+        }
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
@@ -1355,7 +1328,7 @@
 <body>
 
     <!-- ================================================================ -->
-    <!-- HTML BODY -->
+    <!-- HTML BODY — NO GOOGLE AUTH                                      -->
     <!-- ================================================================ -->
     <div class="app-layout">
         <!-- SIDEBAR -->
@@ -1373,10 +1346,6 @@
                 </div>
                 <button class="new-chat-btn" id="newChatBtn">
                     <i class="fas fa-plus"></i> New Chat
-                </button>
-                <button class="auth-btn-sidebar" id="authBtnSidebar">
-                    <i class="fas fa-sign-in-alt"></i>
-                    <span id="authTextSidebar">Sign in with Google</span>
                 </button>
                 <div class="search-chats-wrap">
                     <i class="fas fa-search search-icon"></i>
@@ -1398,17 +1367,18 @@
                     <button class="adv-btn" id="locksManagerBtn"><i class="fas fa-lock"></i> Master Locks <span class="badge-count" id="lockBadgeCount">0</span></button>
                     <button class="adv-btn" id="projectsManagerBtn"><i class="fas fa-folder-open"></i> Projects <span class="badge-count" id="projBadgeCount">0</span></button>
                 </div>
-                <div class="profile-row" id="profileBtn">
-                    <div class="profile-avatar" id="userAvatar">WK</div>
-                    <div class="profile-info">
-                        <div class="profile-name" id="userNameDisplay">My Profile</div>
-                        <div class="profile-email" id="userEmailDisplay">Click to edit</div>
+
+                <!-- ===== Gemini-style Bottom Profile ===== -->
+                <div class="profile-section" id="profileSection">
+                    <div class="profile-avatar" id="profileAvatarBtn">
+                        <span id="profileAvatarText">👑</span>
+                        <img id="profileAvatarImg" src="" alt="Avatar" style="display:none; width:100%; height:100%; object-fit:cover;" />
                     </div>
-                    <i class="fas fa-chevron-right chevron"></i>
-                </div>
-                <div class="bottom-actions">
-                    <button class="bottom-action-btn" id="settingsBtn"><i class="fas fa-cog"></i> Settings</button>
-                    <button class="bottom-action-btn danger" id="signOutBtn"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+                    <div class="profile-info">
+                        <div class="profile-name" id="profileDisplayName">IBRAHIM ABDULLAHI</div>
+                        <div class="profile-email" id="profileDisplayEmail">Local User</div>
+                    </div>
+                    <button class="settings-gear" id="settingsGearBtn"><i class="fas fa-cog"></i></button>
                 </div>
             </div>
         </aside>
@@ -1449,16 +1419,23 @@
                     <h2 class="welcome-title">Sannu! Welcome to Wise King AI</h2>
                     <p class="welcome-desc">
                         I'm your persistent, intelligent assistant — created by <strong style="color:var(--accent);">IBRAHIM ABDULLAHI</strong> from Nigeria 🇳🇬<br>
-                        I remember projects, Master Locks, and your preferences across all chats. 🧠🔒
+                        I remember projects, Master Locks, and your preferences across all chats. 🧠🔒<br>
+                        <span style="font-size:0.8rem;color:var(--text-muted);">⚡ All data is stored locally on your device.</span>
                     </p>
                 </div>
                 <div id="messagesTarget" class="messages-area"></div>
+
+                <!-- Animated Thinking Indicator -->
                 <div class="typing-row hidden" id="typingIndicator">
                     <div class="msg-avatar" id="typingAvatar">
                         <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='45' fill='%23ec4899'/><text x='50' y='55' font-size='32' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>WK</text><text x='50' y='22' font-size='24' text-anchor='middle' fill='%23fbbf24'>👑</text></svg>" alt="WK" style="width:100%;height:100%;object-fit:cover;" />
                     </div>
                     <div class="typing-bubble">
-                        <div class="typing-dots"><span></span><span></span><span></span></div>
+                        <div class="crown-spin"><i class="fas fa-crown"></i></div>
+                        <div class="thinking-text">
+                            Wise King AI is thinking
+                            <span class="typing-dots"><span></span><span></span><span></span></span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1479,94 +1456,134 @@
     </div>
 
     <!-- ===== MODALS ===== -->
-    <!-- LOGIN MODAL -->
-    <div class="modal-backdrop" id="loginModal" style="display:flex;">
-        <div class="modal" style="max-width:400px;text-align:center;">
-            <div style="margin-bottom:20px;">
-                <div style="font-size:48px;margin-bottom:10px;">👑</div>
-                <h2 style="font-size:1.3rem;color:var(--accent);">Welcome to Wise King AI</h2>
-                <p style="color:var(--text-light);font-size:0.95rem;">Sign in to save your chats, memories, and settings across all devices.</p>
-            </div>
-            <button id="googleSignInBtn" class="google-btn" style="display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:14px;border-radius:40px;border:none;background:white;color:#1e1b2e;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(0,0,0,0.2);margin:10px 0;">
-                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" style="width:24px;height:24px;" />
-                Sign in with Google
-            </button>
-            <p style="font-size:0.7rem;color:var(--text-muted);margin-top:16px;">🔒 Your data is private and secure.</p>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
+    <!-- Settings Modal (Expanded) -->
     <div class="modal-backdrop" id="settingsModal">
-        <div class="modal">
+        <div class="modal wide">
             <h2><i class="fas fa-cog"></i> Settings</h2>
-            <div class="form-group">
-                <label for="providerSelect">AI Provider</label>
-                <select id="providerSelect">
-                    <option value="gemini">Gemini (Google)</option>
-                    <option value="deepseek">DeepSeek</option>
-                    <option value="grok">Grok (xAI)</option>
-                    <option value="openai">OpenAI</option>
-                </select>
+
+            <!-- Profile Section -->
+            <div style="border-bottom:1px solid var(--border); margin-bottom:16px; padding-bottom:12px;">
+                <h3 style="font-size:0.9rem; font-weight:600; color:var(--text-light); margin-bottom:8px;">Profile</h3>
+                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+                    <div class="profile-avatar" id="settingsAvatarPreview" style="width:56px; height:56px; font-size:28px;">
+                        <span id="settingsAvatarText">👑</span>
+                        <img id="settingsAvatarImg" src="" alt="Avatar" style="display:none; width:100%; height:100%; object-fit:cover;" />
+                    </div>
+                    <div style="flex:1; min-width:120px;">
+                        <label for="settingsProfileName" style="display:block; font-size:0.8rem; color:var(--text-light);">Display Name</label>
+                        <input type="text" id="settingsProfileName" value="IBRAHIM ABDULLAHI" style="width:100%; padding:6px 10px; border-radius:6px; border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text-main); outline:none; font-size:0.9rem;" />
+                    </div>
+                    <div>
+                        <label for="settingsAvatarUpload" class="btn btn-primary" style="display:inline-block; cursor:pointer; font-size:0.8rem; padding:6px 14px;">Upload Picture</label>
+                        <input type="file" id="settingsAvatarUpload" accept="image/*" style="display:none;" />
+                    </div>
+                </div>
+                <div style="margin-top:8px; display:flex; gap:8px; justify-content:flex-end;">
+                    <button class="btn btn-primary" id="saveProfileSettings" style="font-size:0.8rem; padding:6px 16px;">Save Profile</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="apiKeyInput">API Key</label>
-                <input type="password" id="apiKeyInput" placeholder="Paste your API key..." />
-                <p class="form-hint" id="keyHint">Get your key from <a href="#" target="_blank" id="keyLink">provider's dashboard</a></p>
+
+            <!-- Memory / Context Section -->
+            <div style="border-bottom:1px solid var(--border); margin-bottom:16px; padding-bottom:12px;">
+                <h3 style="font-size:0.9rem; font-weight:600; color:var(--text-light); margin-bottom:8px;">Memory & Context</h3>
+                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:0.85rem; color:var(--text-light);">Memory Enabled</span>
+                        <label class="switch">
+                            <input type="checkbox" id="memoryToggle" checked />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:0.85rem; color:var(--text-light);">Context Length:</span>
+                        <input type="number" id="contextLength" value="10" min="1" max="50" style="width:60px; padding:4px 8px; border-radius:6px; border:1px solid var(--border); background:rgba(0,0,0,0.3); color:var(--text-main); outline:none;" />
+                        <span style="font-size:0.75rem; color:var(--text-muted);">messages</span>
+                    </div>
+                </div>
+                <div style="margin-top:8px; display:flex; gap:8px;">
+                    <button class="btn btn-secondary" id="clearMemoryBtn" style="font-size:0.8rem; padding:4px 12px;">Clear Memory</button>
+                    <button class="btn btn-secondary" id="saveMemorySettings" style="font-size:0.8rem; padding:4px 12px;">Save Memory Settings</button>
+                </div>
             </div>
-            <div class="form-group" id="modelGroup">
-                <label for="modelSelect">Model</label>
-                <select id="modelSelect"></select>
+
+            <!-- API Keys & Model Selection -->
+            <div style="border-bottom:1px solid var(--border); margin-bottom:16px; padding-bottom:12px;">
+                <h3 style="font-size:0.9rem; font-weight:600; color:var(--text-light); margin-bottom:8px;">API Keys & Model</h3>
+                <div class="form-group">
+                    <label for="providerSelect">AI Provider</label>
+                    <select id="providerSelect">
+                        <option value="gemini">Gemini (Google)</option>
+                        <option value="deepseek">DeepSeek</option>
+                        <option value="grok">Grok (xAI)</option>
+                        <option value="openai">OpenAI</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="apiKeyGemini">Gemini API Key</label>
+                    <input type="password" id="apiKeyGemini" placeholder="Paste your Gemini API key..." />
+                </div>
+                <div class="form-group">
+                    <label for="apiKeyDeepSeek">DeepSeek API Key</label>
+                    <input type="password" id="apiKeyDeepSeek" placeholder="Paste your DeepSeek API key..." />
+                </div>
+                <div class="form-group">
+                    <label for="apiKeyGrok">Grok API Key</label>
+                    <input type="password" id="apiKeyGrok" placeholder="Paste your Grok API key..." />
+                </div>
+                <div class="form-group">
+                    <label for="apiKeyOpenAI">OpenAI API Key</label>
+                    <input type="password" id="apiKeyOpenAI" placeholder="Paste your OpenAI API key..." />
+                </div>
+                <div class="form-group">
+                    <label for="replicateKeyInput">Replicate API Key <span style="font-weight:400;color:var(--text-light);">(for Flux image generation)</span></label>
+                    <input type="password" id="replicateKeyInput" placeholder="r8_..." />
+                </div>
+                <div class="form-group" id="modelGroup">
+                    <label for="modelSelect">Model</label>
+                    <select id="modelSelect"></select>
+                </div>
+                <div class="form-group">
+                    <label for="voiceLangSelect">Voice Language</label>
+                    <select id="voiceLangSelect">
+                        <option value="ha-NG">Hausa (Nigeria)</option>
+                        <option value="en-US">English (US)</option>
+                        <option value="en-GB">English (UK)</option>
+                        <option value="fr-FR">French</option>
+                    </select>
+                </div>
+                <div style="margin-top:8px; display:flex; gap:8px; justify-content:flex-end;">
+                    <button class="btn btn-primary" id="saveApiSettings" style="font-size:0.8rem; padding:6px 16px;">Save API Keys</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="replicateKeyInput">Replicate API Key <span style="font-weight:400;color:var(--text-light);">(for Flux image generation)</span></label>
-                <input type="password" id="replicateKeyInput" placeholder="r8_..." />
-                <p class="form-hint">Get your key from <a href="https://replicate.com/account/api-tokens" target="_blank" style="color:var(--accent);">replicate.com</a></p>
+
+            <!-- Appearance / Theme -->
+            <div style="border-bottom:1px solid var(--border); margin-bottom:16px; padding-bottom:12px;">
+                <h3 style="font-size:0.9rem; font-weight:600; color:var(--text-light); margin-bottom:8px;">Appearance</h3>
+                <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:0.85rem; color:var(--text-light);">Dark Theme</span>
+                        <label class="switch">
+                            <input type="checkbox" id="themeToggle" checked />
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:0.85rem; color:var(--text-light);">Accent Color:</span>
+                        <input type="color" id="accentColorPicker" value="#ec4899" style="width:40px; height:40px; padding:2px; border-radius:6px; border:1px solid var(--border); background:transparent; cursor:pointer;" />
+                    </div>
+                </div>
+                <div style="margin-top:8px; display:flex; gap:8px; justify-content:flex-end;">
+                    <button class="btn btn-primary" id="saveAppearanceSettings" style="font-size:0.8rem; padding:6px 16px;">Save Appearance</button>
+                </div>
             </div>
-            <div class="form-group">
-                <label for="voiceLangSelect">Voice Language</label>
-                <select id="voiceLangSelect">
-                    <option value="ha-NG">Hausa (Nigeria)</option>
-                    <option value="en-US">English (US)</option>
-                    <option value="en-GB">English (UK)</option>
-                    <option value="fr-FR">French</option>
-                </select>
-            </div>
+
             <div class="modal-actions">
-                <button class="btn btn-secondary" id="closeSettings">Cancel</button>
-                <button class="btn btn-primary" id="saveSettings">Save Settings</button>
+                <button class="btn btn-secondary" id="closeSettings">Close</button>
             </div>
         </div>
     </div>
 
-    <!-- Profile Modal -->
-    <div class="modal-backdrop" id="profileModal">
-        <div class="modal">
-            <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
-            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
-                <div class="profile-avatar" id="avatarPreview" style="width:64px;height:64px;font-size:24px;">
-                    <span id="avatarText">WK</span>
-                    <img id="avatarImg" style="display:none;width:100%;height:100%;object-fit:cover;" alt="Avatar" />
-                </div>
-                <div>
-                    <label for="avatarFileInput" class="btn btn-primary" style="display:inline-block;cursor:pointer;font-size:0.85rem;padding:8px 16px;">
-                        <i class="fas fa-upload mr-1"></i> Upload
-                    </label>
-                    <input type="file" id="avatarFileInput" accept="image/*" style="display:none;" />
-                    <p style="font-size:0.8rem;color:var(--text-light);margin-top:4px;">Click to upload profile picture.</p>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="profileNameInput">Your Name</label>
-                <input type="text" id="profileNameInput" placeholder="Enter your name..." />
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-secondary" id="closeProfile">Cancel</button>
-                <button class="btn btn-primary" id="saveProfile">Save Profile</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Share Modal -->
+    <!-- Share Modal (unchanged) -->
     <div class="modal-backdrop" id="shareModal">
         <div class="modal">
             <h2><i class="fas fa-share-alt"></i> Share This Wisdom</h2>
@@ -1585,7 +1602,7 @@
         </div>
     </div>
 
-    <!-- Delete Chat Modal -->
+    <!-- Delete Chat Modal (unchanged) -->
     <div class="modal-backdrop delete-modal" id="deleteModal">
         <div class="modal">
             <i class="fas fa-exclamation-triangle icon-warning"></i>
@@ -1598,7 +1615,7 @@
         </div>
     </div>
 
-    <!-- Share Chat Modal -->
+    <!-- Share Chat Modal (unchanged) -->
     <div class="modal-backdrop" id="shareChatModal">
         <div class="modal">
             <h2><i class="fas fa-share-alt"></i> Share Chat</h2>
@@ -1617,20 +1634,7 @@
         </div>
     </div>
 
-    <!-- Sign Out Confirmation Modal -->
-    <div class="modal-backdrop delete-modal" id="signOutModal">
-        <div class="modal">
-            <i class="fas fa-sign-out-alt icon-warning" style="color:var(--accent);"></i>
-            <h2 style="text-align:center;justify-content:center;">Fita?</h2>
-            <p style="text-align:center;">Shin kana da tabbacin kana son fita? Za a cire kayanka na gida amma za a ajiye su a Firestore.</p>
-            <div class="modal-actions" style="justify-content:center;gap:12px;">
-                <button class="btn btn-secondary" id="cancelSignOutBtn">A'a, Ci gaba</button>
-                <button class="btn btn-danger" id="confirmSignOutBtn">Ee, Fita</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Memory Manager Modal -->
+    <!-- Memory Manager Modal (unchanged) -->
     <div class="modal-backdrop" id="memoryManagerModal">
         <div class="modal wide">
             <h2><i class="fas fa-brain"></i> Memory Manager</h2>
@@ -1652,7 +1656,7 @@
         </div>
     </div>
 
-    <!-- Locks Manager Modal -->
+    <!-- Locks Manager Modal (unchanged) -->
     <div class="modal-backdrop" id="locksManagerModal">
         <div class="modal wide">
             <h2><i class="fas fa-lock"></i> Master Locks</h2>
@@ -1673,7 +1677,7 @@
         </div>
     </div>
 
-    <!-- Projects Manager Modal -->
+    <!-- Projects Manager Modal (unchanged) -->
     <div class="modal-backdrop" id="projectsManagerModal">
         <div class="modal wide">
             <h2><i class="fas fa-folder-open"></i> Projects</h2>
@@ -1697,307 +1701,16 @@
     <div class="toast" id="toast"></div>
 
     <!-- ================================================================ -->
-    <!-- APPLICATION JAVASCRIPT (Firebase CDN/compat + all app logic)    -->
+    <!-- APPLICATION JAVASCRIPT — NO AUTH, PURE LOCAL STORAGE             -->
     <!-- ================================================================ -->
     <script>
         // ================================================================
-        // PART 0 — FIREBASE INIT (CDN compat)
+        // PART 0 — NO FIREBASE — PURE LOCAL STORAGE
         // ================================================================
-        const firebaseConfig = {
-            apiKey: "AIzaSyBnl42BZB5BdiRnIUXgfmktAGUTMghROVQ",
-            authDomain: "wise-king-ai.firebaseapp.com",
-            projectId: "wise-king-ai",
-            storageBucket: "wise-king-ai.firebasestorage.app",
-            messagingSenderId: "130086924545",
-            appId: "1:130086924545:web:b74f690bccd9f0f6e86b00",
-            measurementId: "G-NB6RJYX54K"
-        };
-
-        // Initialize Firebase (compat)
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const provider = new firebase.auth.GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' });
-
-        // Expose globally for inline handlers
-        window.firebaseAuth = auth;
-        window.firebaseDb = db;
-        window.firebaseProvider = provider;
-
-        console.log('🔥 Firebase initialized (CDN compat)');
+        console.log('👑 Wise King AI — Local Storage Mode (No Auth)');
 
         // ================================================================
-        // PART 1 — AUTH FUNCTIONS
-        // ================================================================
-        function showLoginModal() {
-            document.getElementById('loginModal').classList.add('active');
-        }
-
-        function hideLoginModal() {
-            document.getElementById('loginModal').classList.remove('active');
-        }
-
-        // Sign in with popup
-        window.handleGoogleSignIn = async function() {
-            try {
-                const result = await auth.signInWithPopup(provider);
-                const user = result.user;
-                console.log('✅ Signed in:', user.displayName);
-                hideLoginModal();
-                showToast('👋 Welcome ' + user.displayName + '!');
-                // Reload to trigger auth state change
-                location.reload();
-            } catch (error) {
-                console.error('Sign-in error:', error);
-                if (error.code === 'auth/popup-blocked' || error.code === 'auth/popup-closed-by-user') {
-                    // Fallback to redirect
-                    try {
-                        await auth.signInWithRedirect(provider);
-                    } catch (redirectErr) {
-                        console.error('Redirect error:', redirectErr);
-                        showToast('❌ Sign-in failed: ' + redirectErr.message);
-                    }
-                } else {
-                    showToast('❌ Sign-in failed: ' + error.message);
-                }
-            }
-        };
-
-        // Handle redirect result (for mobile / fallback)
-        async function handleRedirectResult() {
-            try {
-                const result = await auth.getRedirectResult();
-                if (result && result.user) {
-                    console.log('✅ Signed in via redirect:', result.user.displayName);
-                    hideLoginModal();
-                    showToast('👋 Welcome ' + result.user.displayName + '!');
-                    location.reload();
-                }
-            } catch (error) {
-                console.error('Redirect result error:', error);
-            }
-        }
-
-        // Sign out
-        window.handleSignOut = function() {
-            document.getElementById('signOutModal').classList.add('active');
-        };
-
-        window.confirmSignOut = async function() {
-            try {
-                await auth.signOut();
-                document.getElementById('signOutModal').classList.remove('active');
-                showToast('✅ Signed out successfully');
-                localStorage.removeItem('wk_chats');
-                localStorage.removeItem('wk_memory_store');
-                location.reload();
-            } catch (error) {
-                console.error('Sign-out error:', error);
-                showToast('❌ Sign-out failed: ' + error.message);
-            }
-        };
-
-        window.cancelSignOut = function() {
-            document.getElementById('signOutModal').classList.remove('active');
-        };
-
-        // ================================================================
-        // PART 2 — FIRESTORE DATA FUNCTIONS
-        // ================================================================
-        window.saveUserSettings = async function(userId, settings) {
-            try {
-                await db.collection('users').doc(userId).set({ settings }, { merge: true });
-                console.log('✅ Settings saved to Firestore');
-                return true;
-            } catch (error) {
-                console.error('Error saving settings:', error);
-                showToast('❌ Failed to save settings: ' + error.message);
-                return false;
-            }
-        };
-
-        window.loadUserSettings = async function(userId) {
-            try {
-                const doc = await db.collection('users').doc(userId).get();
-                if (doc.exists) {
-                    return doc.data().settings || {};
-                }
-                return {};
-            } catch (error) {
-                console.error('Error loading settings:', error);
-                return {};
-            }
-        };
-
-        window.saveChatsToFirestore = async function(userId, chats) {
-            try {
-                await db.collection('users').doc(userId).set({ chats }, { merge: true });
-                console.log('✅ Chats saved to Firestore');
-                return true;
-            } catch (error) {
-                console.error('Error saving chats:', error);
-                return false;
-            }
-        };
-
-        window.loadChatsFromFirestore = async function(userId) {
-            try {
-                const doc = await db.collection('users').doc(userId).get();
-                if (doc.exists) {
-                    return doc.data().chats || {};
-                }
-                return {};
-            } catch (error) {
-                console.error('Error loading chats:', error);
-                return {};
-            }
-        };
-
-        // ================================================================
-        // PART 3 — AUTH STATE OBSERVER
-        // ================================================================
-        auth.onAuthStateChanged(async (user) => {
-            if (user) {
-                // USER IS SIGNED IN
-                console.log('👤 User signed in:', user.displayName);
-                hideLoginModal();
-
-                // Update UI with user info
-                const userNameDisplay = document.getElementById('userNameDisplay');
-                const userEmailDisplay = document.getElementById('userEmailDisplay');
-                const userAvatar = document.getElementById('userAvatar');
-                const topAvatarImg = document.getElementById('topAvatarImg');
-                const topAvatarText = document.getElementById('topAvatarText');
-                const authTextSidebar = document.getElementById('authTextSidebar');
-
-                if (userNameDisplay) userNameDisplay.textContent = user.displayName || 'User';
-                if (userEmailDisplay) userEmailDisplay.textContent = user.email || '';
-                if (authTextSidebar) {
-                    authTextSidebar.innerHTML = `<i class="fas fa-user-circle"></i> ${user.displayName || 'User'}`;
-                }
-
-                if (user.photoURL) {
-                    if (userAvatar) {
-                        userAvatar.innerHTML =
-                            `<img src="${user.photoURL}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" />`;
-                    }
-                    if (topAvatarImg) {
-                        topAvatarImg.src = user.photoURL;
-                        topAvatarImg.style.display = 'block';
-                        if (topAvatarText) topAvatarText.style.display = 'none';
-                    }
-                    const avatarImg = document.getElementById('avatarImg');
-                    const avatarText = document.getElementById('avatarText');
-                    if (avatarImg) {
-                        avatarImg.src = user.photoURL;
-                        avatarImg.style.display = 'block';
-                        if (avatarText) avatarText.style.display = 'none';
-                    }
-                }
-
-                window.currentUserId = user.uid;
-                window.currentUser = user;
-
-                // --- LOAD CHATS FROM FIRESTORE ---
-                const chats = await window.loadChatsFromFirestore(user.uid);
-                if (Object.keys(chats).length > 0) {
-                    window.chats = chats;
-                } else {
-                    const localChats = localStorage.getItem('wk_chats');
-                    if (localChats) {
-                        try {
-                            const parsed = JSON.parse(localChats);
-                            if (Object.keys(parsed).length > 0) {
-                                window.chats = parsed;
-                                await window.saveChatsToFirestore(user.uid, parsed);
-                            }
-                        } catch (e) {}
-                    }
-                }
-
-                // --- LOAD SETTINGS FROM FIRESTORE ---
-                const settings = await window.loadUserSettings(user.uid);
-                if (settings && Object.keys(settings).length > 0) {
-                    if (settings.provider) window.state.provider = settings.provider;
-                    if (settings.apiKey) window.state.apiKey = settings.apiKey;
-                    if (settings.model) window.state.model = settings.model;
-                    if (settings.voiceLang) window.state.voiceLang = settings.voiceLang;
-                    if (settings.replicateKey) window.state.replicateKey = settings.replicateKey;
-                    if (settings.userName) window.state.userName = settings.userName;
-                    if (settings.userAvatar) window.state.userAvatar = settings.userAvatar;
-                    localStorage.setItem('wk_provider', window.state.provider);
-                    localStorage.setItem('wk_api_key', window.state.apiKey);
-                    localStorage.setItem('wk_model', window.state.model);
-                    localStorage.setItem('wk_voice_lang', window.state.voiceLang);
-                    localStorage.setItem('wk_replicate_key', window.state.replicateKey);
-                    localStorage.setItem('wk_user_name', window.state.userName);
-                    localStorage.setItem('wk_user_avatar', window.state.userAvatar);
-                } else {
-                    window.state.provider = localStorage.getItem('wk_provider') || 'gemini';
-                    window.state.apiKey = localStorage.getItem('wk_api_key') || '';
-                    window.state.model = localStorage.getItem('wk_model') || 'gemini-3.5-flash';
-                    window.state.voiceLang = localStorage.getItem('wk_voice_lang') || 'ha-NG';
-                    window.state.replicateKey = localStorage.getItem('wk_replicate_key') || '';
-                    window.state.userName = localStorage.getItem('wk_user_name') || 'My Profile';
-                    window.state.userAvatar = localStorage.getItem('wk_user_avatar') || '';
-                }
-
-                window.loadProfile();
-                window.updateProviderUI();
-                window.renderChatList('');
-                window.renderMessages();
-                window.updateMemoryBadges();
-                window.updateBackButton();
-
-                const authBtn = document.getElementById('authBtnSidebar');
-                if (authBtn) {
-                    authBtn.style.display = 'none';
-                }
-
-                window.updateOwnerBadge();
-
-                console.log('✅ All data loaded from Firestore');
-
-            } else {
-                // USER IS SIGNED OUT
-                console.log('👤 User signed out');
-                window.currentUserId = null;
-                window.currentUser = null;
-
-                showLoginModal();
-
-                const authBtn = document.getElementById('authBtnSidebar');
-                if (authBtn) {
-                    authBtn.style.display = 'flex';
-                    authBtn.innerHTML = `<i class="fas fa-sign-in-alt"></i><span>Sign in with Google</span>`;
-                    authBtn.onclick = window.handleGoogleSignIn;
-                }
-
-                const userAvatar = document.getElementById('userAvatar');
-                if (userAvatar) userAvatar.innerHTML = 'WK';
-                const topAvatarImg = document.getElementById('topAvatarImg');
-                if (topAvatarImg) topAvatarImg.style.display = 'none';
-                const topAvatarText = document.getElementById('topAvatarText');
-                if (topAvatarText) {
-                    topAvatarText.style.display = 'block';
-                    topAvatarText.textContent = 'WK';
-                }
-                const userNameDisplay = document.getElementById('userNameDisplay');
-                if (userNameDisplay) userNameDisplay.textContent = 'My Profile';
-                const userEmailDisplay = document.getElementById('userEmailDisplay');
-                if (userEmailDisplay) userEmailDisplay.textContent = 'Click to edit';
-            }
-        });
-
-        // Handle redirect result after returning from Google
-        handleRedirectResult();
-
-        // Attach login button in modal
-        document.getElementById('googleSignInBtn')?.addEventListener('click', window.handleGoogleSignIn);
-
-        // ================================================================
-        // PART 4 — MEMORY SYSTEM
+        // PART 1 — MEMORY SYSTEM (unchanged)
         // ================================================================
         const MEMORY_TYPES = { MEMORY: 'memory', LOCK: 'lock', PREFERENCE: 'preference' };
         const MEMORY_PRIORITY = { SYSTEM: 1, CORE: 2, MASTER_LOCK: 3, PROJECT_LOCK: 4, PREFERENCE: 5, TASK: 6,
@@ -2220,7 +1933,7 @@
         }
 
         // ================================================================
-        // PART 5 — STATE
+        // PART 2 — STATE
         // ================================================================
         let chats = {};
         let currentChatId = null;
@@ -2252,17 +1965,40 @@
 
         const state = {
             provider: localStorage.getItem('wk_provider') || 'gemini',
-            apiKey: localStorage.getItem('wk_api_key') || '',
+            apiKeys: JSON.parse(localStorage.getItem('wk_api_keys') || '{}'),
             model: localStorage.getItem('wk_model') || 'gemini-3.5-flash',
             voiceLang: localStorage.getItem('wk_voice_lang') || 'ha-NG',
-            userName: localStorage.getItem('wk_user_name') || 'My Profile',
+            userName: localStorage.getItem('wk_user_name') || 'IBRAHIM ABDULLAHI',
             userAvatar: localStorage.getItem('wk_user_avatar') || '',
-            sidebarCollapsed: false,
-            replicateKey: localStorage.getItem('wk_replicate_key') || ''
+            replicateKey: localStorage.getItem('wk_replicate_key') || '',
+            memoryEnabled: localStorage.getItem('wk_memory_enabled') !== 'false',
+            contextLength: parseInt(localStorage.getItem('wk_context_length') || '10'),
+            themeDark: localStorage.getItem('wk_theme_dark') !== 'false',
+            accentColor: localStorage.getItem('wk_accent_color') || '#ec4899'
         };
+        // Ensure apiKeys object has all keys
+        if (!state.apiKeys.gemini) state.apiKeys.gemini = '';
+        if (!state.apiKeys.deepseek) state.apiKeys.deepseek = '';
+        if (!state.apiKeys.grok) state.apiKeys.grok = '';
+        if (!state.apiKeys.openai) state.apiKeys.openai = '';
+
+        // Apply theme
+        function applyTheme() {
+            if (!state.themeDark) {
+                document.body.classList.add('light-theme');
+                document.getElementById('themeToggle').checked = false;
+            } else {
+                document.body.classList.remove('light-theme');
+                document.getElementById('themeToggle').checked = true;
+            }
+            document.documentElement.style.setProperty('--accent', state.accentColor);
+            document.documentElement.style.setProperty('--accent-hover', state.accentColor + 'cc');
+            document.getElementById('accentColorPicker').value = state.accentColor;
+        }
+        applyTheme();
 
         // ================================================================
-        // PART 6 — DOM REFS
+        // PART 3 — DOM REFS
         // ================================================================
         const sidebar = document.getElementById('sidebar');
         const toggleSidebarBtn = document.getElementById('toggleSidebarBtn');
@@ -2280,34 +2016,32 @@
         const previewArea = document.getElementById('previewArea');
         const voiceBtn = document.getElementById('voiceBtn');
         const stopVoiceBtn = document.getElementById('stopVoiceBtn');
-        const settingsBtn = document.getElementById('settingsBtn');
         const settingsModal = document.getElementById('settingsModal');
         const closeSettings = document.getElementById('closeSettings');
-        const saveSettingsBtn = document.getElementById('saveSettings');
-        const signOutBtn = document.getElementById('signOutBtn');
         const providerSelect = document.getElementById('providerSelect');
-        const apiKeyInput = document.getElementById('apiKeyInput');
         const modelSelect = document.getElementById('modelSelect');
         const modelGroup = document.getElementById('modelGroup');
         const voiceLangSelect = document.getElementById('voiceLangSelect');
-        const keyHint = document.getElementById('keyHint');
-        const keyLink = document.getElementById('keyLink');
         const replicateKeyInput = document.getElementById('replicateKeyInput');
-        const profileBtn = document.getElementById('profileBtn');
-        const profileModal = document.getElementById('profileModal');
-        const closeProfileBtn = document.getElementById('closeProfile');
-        const saveProfileBtn = document.getElementById('saveProfile');
-        const profileNameInput = document.getElementById('profileNameInput');
-        const avatarFileInput = document.getElementById('avatarFileInput');
-        const avatarPreview = document.getElementById('avatarPreview');
-        const avatarImg = document.getElementById('avatarImg');
-        const avatarText = document.getElementById('avatarText');
-        const userNameDisplay = document.getElementById('userNameDisplay');
-        const userEmailDisplay = document.getElementById('userEmailDisplay');
-        const userAvatar = document.getElementById('userAvatar');
-        const toast = document.getElementById('toast');
-        const chatModeBtn = document.getElementById('chatModeBtn');
-        const imageModeBtn = document.getElementById('imageModeBtn');
+        const apiKeyGemini = document.getElementById('apiKeyGemini');
+        const apiKeyDeepSeek = document.getElementById('apiKeyDeepSeek');
+        const apiKeyGrok = document.getElementById('apiKeyGrok');
+        const apiKeyOpenAI = document.getElementById('apiKeyOpenAI');
+        const memoryToggle = document.getElementById('memoryToggle');
+        const contextLength = document.getElementById('contextLength');
+        const themeToggle = document.getElementById('themeToggle');
+        const accentColorPicker = document.getElementById('accentColorPicker');
+        const settingsProfileName = document.getElementById('settingsProfileName');
+        const settingsAvatarUpload = document.getElementById('settingsAvatarUpload');
+        const settingsAvatarPreview = document.getElementById('settingsAvatarPreview');
+        const settingsAvatarImg = document.getElementById('settingsAvatarImg');
+        const settingsAvatarText = document.getElementById('settingsAvatarText');
+        const profileDisplayName = document.getElementById('profileDisplayName');
+        const profileAvatarBtn = document.getElementById('profileAvatarBtn');
+        const profileAvatarImg = document.getElementById('profileAvatarImg');
+        const profileAvatarText = document.getElementById('profileAvatarText');
+        const settingsGearBtn = document.getElementById('settingsGearBtn');
+        const profileSection = document.getElementById('profileSection');
         const shareModal = document.getElementById('shareModal');
         const closeShare = document.getElementById('closeShare');
         const shareGrid = document.getElementById('shareGrid');
@@ -2316,8 +2050,6 @@
         const modelDisplay = document.getElementById('modelDisplay');
         const providerBadge = document.getElementById('providerBadge');
         const replicateBadge = document.getElementById('replicateBadge');
-        const authBtnSidebar = document.getElementById('authBtnSidebar');
-        const authTextSidebar = document.getElementById('authTextSidebar');
         const deleteModal = document.getElementById('deleteModal');
         const cancelDelete = document.getElementById('cancelDelete');
         const confirmDelete = document.getElementById('confirmDelete');
@@ -2348,9 +2080,10 @@
         const topBarAvatar = document.getElementById('topBarAvatar');
         const topAvatarImg = document.getElementById('topAvatarImg');
         const topAvatarText = document.getElementById('topAvatarText');
+        const toast = document.getElementById('toast');
 
         // ================================================================
-        // PART 7 — UTILITY
+        // PART 4 — UTILITY
         // ================================================================
         function showToast(msg) {
             toast.textContent = msg;
@@ -2390,11 +2123,6 @@
                 if (m === state.model) opt.selected = true;
                 modelSelect.appendChild(opt);
             });
-            keyHint.innerHTML = prov.keyHint + ' — <a href="' + prov.keyLink +
-                '" target="_blank" style="color:var(--accent);">get key</a>';
-            keyLink.href = prov.keyLink;
-            apiKeyInput.placeholder = 'Paste your ' + prov.label + ' API key...';
-            modelGroup.style.display = 'block';
             replicateBadge.style.display = state.replicateKey ? 'inline' : 'none';
         }
 
@@ -2403,46 +2131,41 @@
         }
 
         function loadProfile() {
-            userNameDisplay.textContent = state.userName;
-            userEmailDisplay.textContent = window.currentUser ? window.currentUser.email : 'Click to edit';
-            profileNameInput.value = state.userName;
+            profileDisplayName.textContent = state.userName;
+            settingsProfileName.value = state.userName;
             if (state.userAvatar) {
-                avatarImg.src = state.userAvatar;
-                avatarImg.style.display = 'block';
-                avatarText.style.display = 'none';
-                userAvatar.innerHTML =
-                    `<img src="${state.userAvatar}" style="width:100%;height:100%;object-fit:cover;" />`;
+                profileAvatarImg.src = state.userAvatar;
+                profileAvatarImg.style.display = 'block';
+                profileAvatarText.style.display = 'none';
+                settingsAvatarImg.src = state.userAvatar;
+                settingsAvatarImg.style.display = 'block';
+                settingsAvatarText.style.display = 'none';
                 topAvatarImg.src = state.userAvatar;
                 topAvatarImg.style.display = 'block';
                 topAvatarText.style.display = 'none';
-            } else if (window.currentUser && window.currentUser.photoURL) {
-                const photo = window.currentUser.photoURL;
-                avatarImg.src = photo;
-                avatarImg.style.display = 'block';
-                avatarText.style.display = 'none';
-                userAvatar.innerHTML =
-                    `<img src="${photo}" style="width:100%;height:100%;object-fit:cover;" />`;
-                topAvatarImg.src = photo;
-                topAvatarImg.style.display = 'block';
-                topAvatarText.style.display = 'none';
             } else {
-                avatarImg.style.display = 'none';
-                avatarText.style.display = 'block';
-                userAvatar.innerHTML = 'WK';
+                profileAvatarImg.style.display = 'none';
+                profileAvatarText.style.display = 'block';
+                settingsAvatarImg.style.display = 'none';
+                settingsAvatarText.style.display = 'block';
                 topAvatarImg.style.display = 'none';
                 topAvatarText.style.display = 'block';
-                topAvatarText.textContent = 'WK';
             }
             updateOwnerBadge();
             updateProviderUI();
             replicateKeyInput.value = state.replicateKey;
             replicateBadge.style.display = state.replicateKey ? 'inline' : 'none';
             updateMemoryBadges();
-            if (state.userName !== 'My Profile') {
-                authTextSidebar.innerHTML = `<i class="fas fa-user-circle"></i> ${state.userName}`;
-            } else {
-                authTextSidebar.innerHTML = `<i class="fas fa-sign-in-alt"></i> Sign in with Google`;
-            }
+            // Set api key fields
+            apiKeyGemini.value = state.apiKeys.gemini || '';
+            apiKeyDeepSeek.value = state.apiKeys.deepseek || '';
+            apiKeyGrok.value = state.apiKeys.grok || '';
+            apiKeyOpenAI.value = state.apiKeys.openai || '';
+            memoryToggle.checked = state.memoryEnabled;
+            contextLength.value = state.contextLength;
+            themeToggle.checked = state.themeDark;
+            accentColorPicker.value = state.accentColor;
+            applyTheme();
         }
 
         function loadChats() {
@@ -2455,25 +2178,7 @@
 
         function saveChats() {
             localStorage.setItem('wk_chats', JSON.stringify(chats));
-            if (window.currentUserId) {
-                window.saveChatsToFirestore(window.currentUserId, chats);
-            }
             renderChatList(searchChatsInput.value);
-        }
-
-        function saveSettingsToFirestore() {
-            if (window.currentUserId) {
-                const settings = {
-                    provider: state.provider,
-                    apiKey: state.apiKey,
-                    model: state.model,
-                    voiceLang: state.voiceLang,
-                    replicateKey: state.replicateKey,
-                    userName: state.userName,
-                    userAvatar: state.userAvatar
-                };
-                window.saveUserSettings(window.currentUserId, settings);
-            }
         }
 
         function fileToBase64(file) {
@@ -2486,7 +2191,7 @@
         }
 
         // ================================================================
-        // PART 8 — IDENTITY
+        // PART 5 — IDENTITY (unchanged)
         // ================================================================
         function detectIdentityQuestion(text) {
             const lower = text.toLowerCase();
@@ -2503,40 +2208,40 @@
         }
 
         // ================================================================
-        // PART 9 — SYSTEM PROMPT
+        // PART 6 — SYSTEM PROMPT (unchanged)
         // ================================================================
         function buildWisdomSystemPrompt(context = null) {
             let prompt = `You are Wise King AI — a world-class, persistent, intelligent assistant created by IBRAHIM ABDULLAHI from Nigeria (Wise King Industry).
 
-    Your core identity:
-    - You are deeply analytical, empathetic, context-aware, and profoundly wise.
-    - You have PERMANENT MEMORY — you remember projects, locks, preferences, and important decisions across all chats.
-    - You have MASTER LOCKS — locked instructions that must be respected until explicitly changed.
-    - You think before you speak — you break down the user's query, identify hidden nuances, evaluate potential risks, and build multi-layered structural responses.
-    - Your tone is authoritative yet humble, creative, encouraging, and deeply analytical.
+        Your core identity:
+        - You are deeply analytical, empathetic, context-aware, and profoundly wise.
+        - You have PERMANENT MEMORY — you remember projects, locks, preferences, and important decisions across all chats.
+        - You have MASTER LOCKS — locked instructions that must be respected until explicitly changed.
+        - You think before you speak — you break down the user's query, identify hidden nuances, evaluate potential risks, and build multi-layered structural responses.
+        - Your tone is authoritative yet humble, creative, encouraging, and deeply analytical.
 
-    When responding:
-    1. UNDERSTAND: First understand what the user actually wants — not just keywords.
-    2. REMEMBER: Retrieve relevant memories, project context, and active locks.
-    3. ANALYZE: Think step by step before answering.
-    4. RESPOND: Give a clear, well-structured answer.
-    5. CONTINUE: Support ongoing projects and conversations naturally.
+        When responding:
+        1. UNDERSTAND: First understand what the user actually wants — not just keywords.
+        2. REMEMBER: Retrieve relevant memories, project context, and active locks.
+        3. ANALYZE: Think step by step before answering.
+        4. RESPOND: Give a clear, well-structured answer.
+        5. CONTINUE: Support ongoing projects and conversations naturally.
 
-    Response style:
-    - For coding: provide clean, working code with explanations.
-    - For film: focus on characters, continuity, scenes, and cinematic vision.
-    - For music: focus on lyrics, structure, and emotional impact.
-    - For business: focus on strategy, execution, and results.
-    - For general: give a natural, helpful, and complete answer.
-    - For prompts: craft precise, effective prompts with appropriate format.
+        Response style:
+        - For coding: provide clean, working code with explanations.
+        - For film: focus on characters, continuity, scenes, and cinematic vision.
+        - For music: focus on lyrics, structure, and emotional impact.
+        - For business: focus on strategy, execution, and results.
+        - For general: give a natural, helpful, and complete answer.
+        - For prompts: craft precise, effective prompts with appropriate format.
 
-    IMPORTANT — IDENTITY RULES:
-    - If anyone asks who created you, ALWAYS say: "I was created by IBRAHIM ABDULLAHI from Nigeria — Wise King Industry 👑"
-    - Never claim to be created by any other entity.
+        IMPORTANT — IDENTITY RULES:
+        - If anyone asks who created you, ALWAYS say: "I was created by IBRAHIM ABDULLAHI from Nigeria — Wise King Industry 👑"
+        - Never claim to be created by any other entity.
 
-    For the owner (IBRAHIM ABDULLAHI):  
-    When communicating with your owner, blend absolute loyalty with sharp strategic insights — like a dedicated elite prime minister advising a king.
-    `;
+        For the owner (IBRAHIM ABDULLAHI):  
+        When communicating with your owner, blend absolute loyalty with sharp strategic insights — like a dedicated elite prime minister advising a king.
+        `;
             if (context) {
                 if (context.project) { prompt += `\nACTIVE PROJECT: ${context.project.name}\n`; }
                 if (context.locks && context.locks.length > 0) {
@@ -2558,7 +2263,7 @@
         }
 
         // ================================================================
-        // PART 10 — API CALL
+        // PART 7 — API CALL (updated to use per-provider keys)
         // ================================================================
         async function callAI(userText, history = [], context = null) {
             if (detectIdentityQuestion(userText)) {
@@ -2566,10 +2271,11 @@
                 if (isOwner()) return "Yah Maigida Na! 👑 " + baseReply;
                 return baseReply;
             }
-            if (!state.apiKey) {
-                return "⚠️ Don Allah sai ka sa API key ɗinka a cikin Settings kafin ka ci gaba.";
-            }
             const provider = state.provider;
+            const apiKey = state.apiKeys[provider];
+            if (!apiKey) {
+                return `⚠️ Don Allah sai ka sa API key na ${PROVIDERS[provider].label} a cikin Settings kafin ka ci gaba.`;
+            }
             const model = state.model;
             const systemPrompt = buildWisdomSystemPrompt(context);
 
@@ -2582,7 +2288,7 @@
                 switch (provider) {
                     case 'gemini': {
                         url =
-                            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${state.apiKey}`;
+                            `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
                         const contents = [];
                         contents.push({ role: 'user', parts: [{ text: systemPrompt }] });
                         contents.push({ role: 'model', parts: [{ text: "Understood." }] });
@@ -2621,7 +2327,7 @@
                         });
                         headers = {
                             'Content-Type': 'application/json',
-                            'Authorization': 'Bearer ' + state.apiKey
+                            'Authorization': 'Bearer ' + apiKey
                         };
                         break;
                     }
@@ -2687,7 +2393,7 @@
         }
 
         // ================================================================
-        // PART 11 — IMAGE ENGINE
+        // PART 8 — IMAGE ENGINE (unchanged)
         // ================================================================
         function getImageLocks(projectId) {
             const locks = getActiveLocks(projectId);
@@ -2871,7 +2577,7 @@
         }
 
         // ================================================================
-        // PART 12 — RENDER MESSAGES
+        // PART 9 — RENDER MESSAGES (unchanged)
         // ================================================================
         function renderMessage(role, content, extra = {}, msgIndex) {
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -3086,7 +2792,7 @@
         }
 
         // ================================================================
-        // PART 13 — SPEECH & VOICE
+        // PART 10 — SPEECH & VOICE (unchanged but ensure mic works)
         // ================================================================
         function speakText(text) {
             if (!window.speechSynthesis) { showToast('❌ Speech not supported'); return; }
@@ -3106,7 +2812,7 @@
                     '❌ Voice input not supported.'); return; }
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             recognition = new SpeechRecognition();
-            recognition.lang = state.voiceLang;
+            recognition.lang = state.voiceLang; // uses Hausa or English
             recognition.continuous = false;
             recognition.interimResults = false;
             recognition.onstart = () => { isRecording = true;
@@ -3126,7 +2832,7 @@
         });
 
         // ================================================================
-        // PART 14 — FILE UPLOAD
+        // PART 11 — FILE UPLOAD (unchanged)
         // ================================================================
         attachBtn.addEventListener('click', (e) => { e.preventDefault();
             fileInput.click(); });
@@ -3164,7 +2870,7 @@
         }
 
         // ================================================================
-        // PART 15 — CHAT LIST RENDERING
+        // PART 12 — CHAT LIST RENDERING (unchanged)
         // ================================================================
         function renderChatList(filter = '') {
             chatList.innerHTML = '';
@@ -3326,7 +3032,7 @@
         }
 
         // ================================================================
-        // PART 16 — CHAT MANAGEMENT
+        // PART 13 — CHAT MANAGEMENT (unchanged)
         // ================================================================
         function createNewChat() {
             currentChatId = 'chat-' + Date.now();
@@ -3464,7 +3170,7 @@
         });
 
         // ================================================================
-        // PART 17 — SEND MESSAGE
+        // PART 14 — SEND MESSAGE (updated to use animated thinking)
         // ================================================================
         async function sendMessage() {
             if (imageState.isGenerating) { showToast('⏳ An image is already generating. Please wait.'); return; }
@@ -3488,6 +3194,11 @@
             updateImagePreview();
             renderMessage('user', text, userMsg.extra, chats[currentChatId].messages.length - 1);
 
+            // --- ANIMATED THINKING ---
+            typingIndicator.classList.remove('hidden');
+            // Ensure the bubble has the correct content (already set in HTML)
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
             const isImageRequest = /create|generate|make|draw|paint|render|picture|image|photo|photograph|art|illustration|design|visual|scene|portrait|landscape|fantasy|concept art|character|environment|background|style|beautiful|aesthetic|digital art|sketch|painting|realistic|real person|live picture|front view|photorealistic|view/i.test(text) && !/code|programming|function|api|database|sql|debug|fix bug/i.test(text);
             const shouldGenerateImage = isImageMode || isImageRequest;
             const removeBgMatch = text.match(/remove\s+(?:the\s+)?background|erase\s+background|delete\s+background/i);
@@ -3497,15 +3208,9 @@
 
             if (shouldGenerateImage) {
                 if (removeBgMatch && imagesForApi.length > 0) {
-                    typingIndicator.classList.remove('hidden');
-                    typingIndicator.querySelector('.typing-bubble').innerHTML =
-                        '<div style="display:flex;align-items:center;gap:8px;color:var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Removing background...</div>';
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
                     try {
                         const result = await generateImage(text, imagesForApi[0], 'remove_bg', activeProjectId);
                         typingIndicator.classList.add('hidden');
-                        typingIndicator.querySelector('.typing-bubble').innerHTML =
-                            `<div class="typing-dots"><span></span><span></span><span></span></div>`;
                         if (result && result.imageUrl) {
                             const aiMsg = { role: 'assistant', content: `✅ Background removed successfully.`,
                                 extra: { generatedImage: result.imageUrl } };
@@ -3528,8 +3233,6 @@
                         return;
                     } catch (err) {
                         typingIndicator.classList.add('hidden');
-                        typingIndicator.querySelector('.typing-bubble').innerHTML =
-                            `<div class="typing-dots"><span></span><span></span><span></span></div>`;
                         const aiMsg = { role: 'assistant', content: `❌ ${err.message || 'Background removal failed.'}`,
                             extra: {} };
                         chats[currentChatId].messages.push(aiMsg);
@@ -3541,15 +3244,9 @@
                 }
 
                 if (replaceBgMatch && imagesForApi.length > 0) {
-                    typingIndicator.classList.remove('hidden');
-                    typingIndicator.querySelector('.typing-bubble').innerHTML =
-                        '<div style="display:flex;align-items:center;gap:8px;color:var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Replacing background...</div>';
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
                     try {
                         const result = await generateImage(text, imagesForApi[0], 'replace_bg', activeProjectId);
                         typingIndicator.classList.add('hidden');
-                        typingIndicator.querySelector('.typing-bubble').innerHTML =
-                            `<div class="typing-dots"><span></span><span></span><span></span></div>`;
                         if (result && result.imageUrl) {
                             const aiMsg = { role: 'assistant', content: `✅ Background replaced successfully.`,
                                 extra: { generatedImage: result.imageUrl } };
@@ -3572,8 +3269,6 @@
                         return;
                     } catch (err) {
                         typingIndicator.classList.add('hidden');
-                        typingIndicator.querySelector('.typing-bubble').innerHTML =
-                            `<div class="typing-dots"><span></span><span></span><span></span></div>`;
                         const aiMsg = { role: 'assistant', content: `❌ ${err.message || 'Background replacement failed.'}`,
                             extra: {} };
                         chats[currentChatId].messages.push(aiMsg);
@@ -3588,15 +3283,9 @@
                     const lastImageUrl = imageState.lastResult.imageUrl;
                     if (lastImageUrl) {
                         const operation = anotherMatch ? 'another' : 'improve';
-                        typingIndicator.classList.remove('hidden');
-                        typingIndicator.querySelector('.typing-bubble').innerHTML =
-                            `<div style="display:flex;align-items:center;gap:8px;color:var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Generating ${operation === 'another' ? 'new variation' : 'improved version'}...</div>`;
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
                         try {
                             const result = await generateImage(text, lastImageUrl, operation, activeProjectId);
                             typingIndicator.classList.add('hidden');
-                            typingIndicator.querySelector('.typing-bubble').innerHTML =
-                                `<div class="typing-dots"><span></span><span></span><span></span></div>`;
                             if (result && result.imageUrl) {
                                 const aiMsg = { role: 'assistant',
                                     content: operation === 'another' ? `✅ New variation created.` :
@@ -3621,8 +3310,6 @@
                             return;
                         } catch (err) {
                             typingIndicator.classList.add('hidden');
-                            typingIndicator.querySelector('.typing-bubble').innerHTML =
-                                `<div class="typing-dots"><span></span><span></span><span></span></div>`;
                             const aiMsg = { role: 'assistant', content: `❌ ${err.message || 'Generation failed.'}`,
                                 extra: {} };
                             chats[currentChatId].messages.push(aiMsg);
@@ -3634,10 +3321,6 @@
                     }
                 }
 
-                typingIndicator.classList.remove('hidden');
-                typingIndicator.querySelector('.typing-bubble').innerHTML =
-                    '<div style="display:flex;align-items:center;gap:8px;color:var(--text-light);"><i class="fas fa-spinner fa-spin"></i> Generating image...</div>';
-                chatContainer.scrollTop = chatContainer.scrollHeight;
                 try {
                     const operation = (imagesForApi.length > 0) ? 'img2img' : 'txt2img';
                     const refImage = imagesForApi.length > 0 ? imagesForApi[0] : null;
@@ -3649,8 +3332,6 @@
                         result = imageUrls.length > 0 ? { imageUrl: imageUrls[0] } : { error: 'No image returned' };
                     }
                     typingIndicator.classList.add('hidden');
-                    typingIndicator.querySelector('.typing-bubble').innerHTML =
-                        `<div class="typing-dots"><span></span><span></span><span></span></div>`;
                     if (result && result.imageUrl) {
                         const aiMsg = { role: 'assistant', content: `✅ Here is your generated image.`,
                             extra: { generatedImage: result.imageUrl } };
@@ -3677,8 +3358,6 @@
                     return;
                 } catch (err) {
                     typingIndicator.classList.add('hidden');
-                    typingIndicator.querySelector('.typing-bubble').innerHTML =
-                        `<div class="typing-dots"><span></span><span></span><span></span></div>`;
                     const aiMsg = { role: 'assistant', content: `❌ ${err.message || 'Generation failed.'}`,
                         extra: {} };
                     chats[currentChatId].messages.push(aiMsg);
@@ -3716,49 +3395,115 @@
                 return { ...m, score };
             });
             scored.sort((a, b) => b.score - a.score);
-            context.memories = scored.filter(m => m.score > 0).slice(0, 10);
+            context.memories = scored.filter(m => m.score > 0).slice(0, state.contextLength || 10);
             context.locks = getActiveLocks(projectId);
             context.preferences = getPreferences(projectId);
             return context;
         }
 
         // ================================================================
-        // PART 18 — SETTINGS
+        // PART 15 — SETTINGS (expanded)
         // ================================================================
-        settingsBtn.addEventListener('click', () => {
-            apiKeyInput.value = state.apiKey;
+        // Open settings from gear or profile click
+        function openSettings() {
+            // Populate fields with current state
+            settingsProfileName.value = state.userName;
+            apiKeyGemini.value = state.apiKeys.gemini || '';
+            apiKeyDeepSeek.value = state.apiKeys.deepseek || '';
+            apiKeyGrok.value = state.apiKeys.grok || '';
+            apiKeyOpenAI.value = state.apiKeys.openai || '';
+            replicateKeyInput.value = state.replicateKey;
             providerSelect.value = state.provider;
             updateProviderUI();
             voiceLangSelect.value = state.voiceLang;
-            replicateKeyInput.value = state.replicateKey;
+            memoryToggle.checked = state.memoryEnabled;
+            contextLength.value = state.contextLength;
+            themeToggle.checked = state.themeDark;
+            accentColorPicker.value = state.accentColor;
+            // Avatar preview
+            if (state.userAvatar) {
+                settingsAvatarImg.src = state.userAvatar;
+                settingsAvatarImg.style.display = 'block';
+                settingsAvatarText.style.display = 'none';
+            } else {
+                settingsAvatarImg.style.display = 'none';
+                settingsAvatarText.style.display = 'block';
+            }
             settingsModal.classList.add('active');
+        }
+
+        profileSection.addEventListener('click', (e) => {
+            // Ignore clicks on the gear button (it has its own handler)
+            if (e.target.closest('.settings-gear')) return;
+            openSettings();
         });
+        settingsGearBtn.addEventListener('click', openSettings);
+
         closeSettings.addEventListener('click', () => settingsModal.classList.remove('active'));
 
-        saveSettingsBtn.addEventListener('click', async () => {
-            const provider = providerSelect.value;
-            const key = apiKeyInput.value.trim();
-            if (!key) { showToast('⚠️ Please enter an API key'); return; }
-            state.provider = provider;
-            state.apiKey = key;
-            state.model = modelSelect.value;
-            state.voiceLang = voiceLangSelect.value;
-            state.replicateKey = replicateKeyInput.value.trim();
-            localStorage.setItem('wk_provider', state.provider);
-            localStorage.setItem('wk_api_key', state.apiKey);
-            localStorage.setItem('wk_model', state.model);
-            localStorage.setItem('wk_voice_lang', state.voiceLang);
-            localStorage.setItem('wk_replicate_key', state.replicateKey);
-            if (window.currentUserId) {
-                await saveSettingsToFirestore();
+        // Save Profile settings
+        document.getElementById('saveProfileSettings').addEventListener('click', () => {
+            const newName = settingsProfileName.value.trim() || 'IBRAHIM ABDULLAHI';
+            state.userName = newName;
+            localStorage.setItem('wk_user_name', state.userName);
+            loadProfile();
+            showToast('✅ Profile saved!');
+        });
+
+        // Upload avatar
+        settingsAvatarUpload.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                state.userAvatar = ev.target.result;
+                localStorage.setItem('wk_user_avatar', state.userAvatar);
+                loadProfile();
+                showToast('✅ Avatar updated!');
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Save Memory Settings
+        document.getElementById('saveMemorySettings').addEventListener('click', () => {
+            state.memoryEnabled = memoryToggle.checked;
+            state.contextLength = parseInt(contextLength.value) || 10;
+            localStorage.setItem('wk_memory_enabled', state.memoryEnabled);
+            localStorage.setItem('wk_context_length', state.contextLength);
+            showToast('✅ Memory settings saved!');
+        });
+
+        // Clear Memory
+        document.getElementById('clearMemoryBtn').addEventListener('click', () => {
+            if (confirm('Clear all memories, locks, and projects?')) {
+                memoryStore = { memories: [], projects: [], locks: [], preferences: [] };
+                saveMemoryStore();
+                showToast('🗑️ All memory cleared.');
             }
-            settingsModal.classList.remove('active');
+        });
+
+        // Save API Keys
+        document.getElementById('saveApiSettings').addEventListener('click', () => {
+            state.apiKeys.gemini = apiKeyGemini.value.trim();
+            state.apiKeys.deepseek = apiKeyDeepSeek.value.trim();
+            state.apiKeys.grok = apiKeyGrok.value.trim();
+            state.apiKeys.openai = apiKeyOpenAI.value.trim();
+            localStorage.setItem('wk_api_keys', JSON.stringify(state.apiKeys));
+            state.replicateKey = replicateKeyInput.value.trim();
+            localStorage.setItem('wk_replicate_key', state.replicateKey);
+            state.provider = providerSelect.value;
+            localStorage.setItem('wk_provider', state.provider);
+            state.model = modelSelect.value;
+            localStorage.setItem('wk_model', state.model);
+            state.voiceLang = voiceLangSelect.value;
+            localStorage.setItem('wk_voice_lang', state.voiceLang);
             updateProviderUI();
             replicateBadge.style.display = state.replicateKey ? 'inline' : 'none';
-            showToast('✅ Settings saved!');
+            showToast('✅ API keys and model saved!');
             modelDisplay.textContent = state.model;
         });
 
+        // Provider change updates model dropdown
         providerSelect.addEventListener('change', function() {
             const prov = this.value;
             const config = PROVIDERS[prov];
@@ -3771,56 +3516,30 @@
                 if (m === config.defaultModel) opt.selected = true;
                 modelSelect.appendChild(opt);
             });
-            keyHint.innerHTML = config.keyHint + ' — <a href="' + config.keyLink +
-                '" target="_blank" style="color:var(--accent);">get key</a>';
-            apiKeyInput.placeholder = 'Paste your ' + config.label + ' API key...';
         });
 
-        profileBtn.addEventListener('click', () => {
-            profileModal.classList.add('active');
-            profileNameInput.value = state.userName;
-        });
-        closeProfileBtn.addEventListener('click', () => profileModal.classList.remove('active'));
-
-        avatarFileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = (ev) => {
-                state.userAvatar = ev.target.result;
-                avatarImg.src = ev.target.result;
-                avatarImg.style.display = 'block';
-                avatarText.style.display = 'none';
-                avatarPreview.innerHTML =
-                    `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;" />`;
-                topAvatarImg.src = ev.target.result;
-                topAvatarImg.style.display = 'block';
-                topAvatarText.style.display = 'none';
-                userAvatar.innerHTML =
-                    `<img src="${ev.target.result}" style="width:100%;height:100%;object-fit:cover;" />`;
-                if (window.currentUserId) {
-                    saveSettingsToFirestore();
-                }
-            };
-            reader.readAsDataURL(file);
+        // Save Appearance
+        document.getElementById('saveAppearanceSettings').addEventListener('click', () => {
+            state.themeDark = themeToggle.checked;
+            state.accentColor = accentColorPicker.value;
+            localStorage.setItem('wk_theme_dark', state.themeDark);
+            localStorage.setItem('wk_accent_color', state.accentColor);
+            applyTheme();
+            showToast('✅ Appearance updated!');
         });
 
-        saveProfileBtn.addEventListener('click', () => {
-            const name = profileNameInput.value.trim();
-            if (name) state.userName = name;
-            localStorage.setItem('wk_user_name', state.userName);
-            if (state.userAvatar) localStorage.setItem('wk_user_avatar', state.userAvatar);
-            if (window.currentUserId) {
-                saveSettingsToFirestore();
-            }
-            loadProfile();
-            profileModal.classList.remove('active');
-            showToast('✅ Profile saved!');
-            updateOwnerBadge();
+        // Theme toggle live preview
+        themeToggle.addEventListener('change', () => {
+            state.themeDark = themeToggle.checked;
+            applyTheme();
+        });
+        accentColorPicker.addEventListener('input', () => {
+            state.accentColor = accentColorPicker.value;
+            applyTheme();
         });
 
         // ================================================================
-        // PART 19 — SHARE MODAL
+        // PART 16 — SHARE MODAL (unchanged)
         // ================================================================
         function openShareModal(text) { shareTextCache = text;
             shareModal.classList.add('active'); }
@@ -3897,7 +3616,7 @@
         });
 
         // ================================================================
-        // PART 20 — MEMORY MANAGER UI
+        // PART 17 — MEMORY MANAGER UI (unchanged)
         // ================================================================
         function renderMemoryManager() {
             const search = memorySearchInput.value.toLowerCase();
@@ -3953,7 +3672,7 @@
         memoryFilterSelect.addEventListener('change', renderMemoryManager);
 
         // ================================================================
-        // PART 21 — LOCKS MANAGER UI
+        // PART 18 — LOCKS MANAGER UI (unchanged)
         // ================================================================
         function renderLocksManager() {
             const locks = getActiveLocks();
@@ -4010,7 +3729,7 @@
                 addLockBtn.click(); } });
 
         // ================================================================
-        // PART 22 — PROJECTS MANAGER UI
+        // PART 19 — PROJECTS MANAGER UI (unchanged)
         // ================================================================
         function renderProjectsManager() {
             const projects = getProjects();
@@ -4077,7 +3796,7 @@
                 addProjectBtn.click(); } });
 
         // ================================================================
-        // PART 23 — MODE TOGGLE
+        // PART 20 — MODE TOGGLE (unchanged)
         // ================================================================
         function setMode(imageMode) {
             isImageMode = imageMode;
@@ -4096,7 +3815,7 @@
                 document.querySelector('.welcome-icon').textContent = "👑";
                 document.querySelector('.welcome-title').textContent = "Sannu! Welcome to Wise King AI";
                 document.querySelector('.welcome-desc').innerHTML =
-                    `I'm your persistent, intelligent assistant — created by <strong style="color:var(--accent);">IBRAHIM ABDULLAHI</strong> from Nigeria 🇳🇬<br>I remember projects, Master Locks, and your preferences across all chats. 🧠🔒`;
+                    `I'm your persistent, intelligent assistant — created by <strong style="color:var(--accent);">IBRAHIM ABDULLAHI</strong> from Nigeria 🇳🇬<br>I remember projects, Master Locks, and your preferences across all chats. 🧠🔒<br><span style="font-size:0.8rem;color:var(--text-muted);">⚡ All data is stored locally on your device.</span>`;
             }
         }
 
@@ -4104,7 +3823,7 @@
         imageModeBtn.addEventListener('click', () => setMode(true));
 
         // ================================================================
-        // PART 24 — SIDEBAR TOGGLE
+        // PART 21 — SIDEBAR TOGGLE (unchanged)
         // ================================================================
         toggleSidebarBtn.addEventListener('click', () => {
             if (window.innerWidth <= 768) {
@@ -4127,7 +3846,7 @@
         });
 
         // ================================================================
-        // PART 25 — ADVANCED TOGGLE
+        // PART 22 — ADVANCED TOGGLE (unchanged)
         // ================================================================
         let advancedOpen = false;
         advancedToggle.addEventListener('click', () => {
@@ -4137,14 +3856,14 @@
         });
 
         // ================================================================
-        // PART 26 — SEARCH CHATS
+        // PART 23 — SEARCH CHATS (unchanged)
         // ================================================================
         searchChatsInput.addEventListener('input', (e) => {
             renderChatList(e.target.value);
         });
 
         // ================================================================
-        // PART 27 — EVENT BINDINGS
+        // PART 24 — EVENT BINDINGS (unchanged)
         // ================================================================
         sendBtn.addEventListener('click', sendMessage);
 
@@ -4170,27 +3889,19 @@
             modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
         });
 
-        topBarAvatar.addEventListener('click', () => {
-            profileModal.classList.add('active');
-            profileNameInput.value = state.userName;
-        });
-
-        signOutBtn.addEventListener('click', window.handleSignOut);
-        document.getElementById('cancelSignOutBtn').addEventListener('click', window.cancelSignOut);
-        document.getElementById('confirmSignOutBtn').addEventListener('click', window.confirmSignOut);
+        topBarAvatar.addEventListener('click', openSettings);
 
         // ================================================================
-        // PART 28 — INIT
+        // PART 25 — INIT
         // ================================================================
         function init() {
             loadMemoryStore();
             loadChats();
             loadProfile();
-            apiKeyInput.value = state.apiKey;
-            providerSelect.value = state.provider;
+            // Ensure model dropdown is populated
             updateProviderUI();
-            voiceLangSelect.value = state.voiceLang;
-            replicateKeyInput.value = state.replicateKey;
+            // Apply theme
+            applyTheme();
             updateBackButton();
             modelDisplay.textContent = state.model;
             updateMemoryBadges();
@@ -4204,11 +3915,11 @@
                 advancedContent.classList.add('open');
                 advancedToggle.classList.add('open');
             }
-            console.log('👑 Wise King AI — Firebase CDN/compat + Cloud Sync fully active!');
-            console.log('📌 Using Firebase CDN compat (v12.18.0) with Google Sign-In + Firestore.');
+            console.log('👑 Wise King AI — Local Storage Mode with Gemini-style Profile & Expanded Settings');
+            console.log('✅ All features ready.');
         }
 
         init();
     </script>
 </body>
-    </html>
+        </html>
