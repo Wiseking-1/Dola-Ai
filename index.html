@@ -43,14 +43,12 @@
   .login-subtitle { color:var(--text-secondary); font-size:14px; margin-bottom:28px; }
   .social-btn { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; padding:12px; margin-bottom:12px; border-radius:var(--radius-md); background:var(--bg-elevated); border:1px solid var(--border-default); color:var(--text-primary); font-size:14px; font-weight:500; cursor:pointer; transition:all var(--transition-fast); font-family:inherit; }
   .social-btn:hover { background:var(--bg-hover); border-color:var(--border-strong); transform:translateY(-1px); }
-  .divider { display:flex; align-items:center; gap:12px; margin:20px 0; color:var(--text-tertiary); font-size:12px; }
-  .divider::before, .divider::after { content:""; flex:1; height:1px; background:var(--border-default); }
   .skip-auth { background:none; border:none; color:var(--text-secondary); font-size:13px; cursor:pointer; margin-top:16px; text-decoration:underline; font-family:inherit; }
   .skip-auth:hover { color:var(--text-primary); }
 
   .app { display:flex; height:100vh; height:100dvh; width:100vw; overflow:hidden; }
   .sidebar { width:var(--sidebar-width); min-width:var(--sidebar-width); background:var(--bg-secondary); border-right:1px solid var(--border-subtle); display:flex; flex-direction:column; height:100vh; height:100dvh; transition:transform var(--transition-smooth); z-index:40; }
-  .sidebar-header { padding:14px 16px; border-bottom:1px solid var(--border-subtle); flex-shrink:0; display:flex; align-items:center; justify-content:between; }
+  .sidebar-header { padding:14px 16px; border-bottom:1px solid var(--border-subtle); flex-shrink:0; display:flex; align-items:center; justify-content:space-between; }
   .brand { display:flex; align-items:center; gap:10px; }
   .brand-logo { width:32px; height:32px; border-radius:10px; background:var(--accent-gradient); display:flex; align-items:center; justify-content:center; font-size:16px; box-shadow:0 0 12px var(--accent-glow); }
   .brand-name { font-weight:600; font-size:17px; letter-spacing:-0.01em; }
@@ -144,11 +142,21 @@
   .message.user .msg-body { display:flex; flex-direction:column; align-items:flex-end; }
   .msg-name { font-size:12.5px; font-weight:600; color:var(--text-secondary); margin-bottom:4px; padding:0 4px; }
   .message.user .msg-name { text-align:right; }
-  .msg-content { padding:12px 16px; border-radius:var(--radius-lg); font-size:15px; line-height:1.7; word-wrap:break-word; overflow-wrap:break-word; white-space:pre-wrap; letter-spacing:-0.005em; max-width:100%; }
+  .msg-content { padding:12px 16px; border-radius:var(--radius-lg); font-size:15px; line-height:1.7; word-wrap:break-word; overflow-wrap:break-word; white-space:pre-wrap; letter-spacing:-0.005em; max-width:100%; transition:max-height var(--transition-smooth); }
   .msg-content.ai { background:var(--bg-secondary); border:1px solid var(--border-subtle); border-top-left-radius:4px; color:var(--text-primary); }
   .msg-content.user { background:var(--accent-gradient); color:white; border-top-right-radius:4px; box-shadow:var(--shadow-sm); }
   .msg-content.error { background:rgba(239,68,68,0.1); border:1px solid rgba(239,68,68,0.25); color:#fca5a5; }
-  .msg-content pre { background:var(--bg-primary); border:1px solid var(--border-subtle); padding:14px 16px; border-radius:var(--radius-md); overflow-x:auto; font-family:'JetBrains Mono','Consolas',monospace; font-size:13px; line-height:1.6; margin:10px 0; white-space:pre; position:relative; }
+
+  /* Gemini Style Collapse Styles */
+  .msg-content.collapsible { position:relative; overflow:hidden; }
+  .msg-content.collapsible.collapsed { max-height: 160px; }
+  .msg-content.collapsible.collapsed::after { content: ""; position: absolute; bottom: 0; left: 0; right: 0; height: 60px; background: linear-gradient(transparent, var(--bg-secondary)); pointer-events: none; }
+  .message.user .msg-content.collapsible.collapsed::after { background: linear-gradient(transparent, #6366f1); }
+  .see-more-btn { display:inline-block; margin-top:8px; font-size:13px; font-weight:600; color:var(--accent-hover); background:none; border:none; cursor:pointer; padding:2px 4px; font-family:inherit; }
+  .message.user .see-more-btn { color:#fff; text-decoration:underline; }
+  .see-more-btn:hover { opacity:0.8; }
+
+  .msg-content pre { background:var(--bg-primary); border:1px solid var(--border-subtle); padding:14px 16px; border-radius:var(--radius-md); overflow-x:auto; font-family:'JetBrains Mono','Consolas',monospace; font-size:13px; line-height:1.6; margin:10px 0; white-space:pre; position:relative; padding-top: 36px; }
   .msg-content code { background:rgba(255,255,255,0.08); padding:2px 6px; border-radius:4px; font-family:'JetBrains Mono',monospace; font-size:0.9em; }
   .msg-content pre code { background:transparent; padding:0; }
 
@@ -168,10 +176,10 @@
   .md th,.md td { border:1px solid var(--border-default); padding:7px 10px; text-align:left; }
   .md th { background:var(--bg-elevated); font-weight:600; }
   .md-pre { position:relative; }
-  .md-copy { position:absolute; top:8px; right:8px; background:var(--bg-elevated); border:1px solid var(--border-default); color:var(--text-secondary); font-size:11px; padding:4px 9px; border-radius:6px; cursor:pointer; font-family:inherit; opacity:0; transition:opacity .15s; display:inline-flex; align-items:center; gap:5px; z-index:2; }
-  .md-pre:hover .md-copy { opacity:1; }
-  .md-copy:hover { background:var(--bg-hover); color:var(--text-primary); }
-  .md-copy.copied { background:rgba(16,185,129,0.2); color:#34d399; border-color:rgba(16,185,129,0.4); }
+  .md-actions { position:absolute; top:8px; right:8px; display:flex; gap:6px; z-index:2; }
+  .md-btn { background:var(--bg-elevated); border:1px solid var(--border-default); color:var(--text-secondary); font-size:11px; padding:4px 9px; border-radius:6px; cursor:pointer; font-family:inherit; transition:all .15s; display:inline-flex; align-items:center; gap:5px; }
+  .md-btn:hover { background:var(--bg-hover); color:var(--text-primary); }
+  .md-btn.copied { background:rgba(16,185,129,0.2); color:#34d399; border-color:rgba(16,185,129,0.4); }
   .md-cursor::after { content:"▍"; color:var(--accent); animation:blink 1s steps(2) infinite; margin-left:1px; }
   @keyframes blink { 50% { opacity:0; } }
 
@@ -210,13 +218,11 @@
   .gen-image-actions button, .gen-image-actions a { flex:1; padding:10px; background:var(--bg-secondary); border:none; color:var(--text-primary); cursor:pointer; font-size:12px; font-weight:500; display:flex; align-items:center; justify-content:center; gap:6px; text-decoration:none; font-family:inherit; transition:background var(--transition-fast); }
   .gen-image-actions button:hover, .gen-image-actions a:hover { background:var(--bg-hover); }
 
+  /* Fast Response Thinking Animation (One Clean Pulse Ring) */
   .typing-indicator { display:flex; gap:14px; padding:8px 0; margin-bottom:8px; }
   .typing-indicator.hidden { display:none; }
-  .typing-bubble { display:flex; align-items:center; gap:5px; padding:14px 18px; background:var(--bg-secondary); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); border-top-left-radius:4px; }
-  .typing-bubble span { width:7px; height:7px; background:var(--accent); border-radius:50%; animation:typing 1.4s infinite ease-in-out both; }
-  .typing-bubble span:nth-child(1) { animation-delay:-0.32s; }
-  .typing-bubble span:nth-child(2) { animation-delay:-0.16s; }
-  @keyframes typing { 0%,80%,100% { transform:scale(0.5); opacity:0.3; } 40% { transform:scale(1); opacity:1; } }
+  .typing-bubble { display:flex; align-items:center; justify-content:center; padding:12px 18px; background:var(--bg-secondary); border:1px solid var(--border-subtle); border-radius:var(--radius-lg); border-top-left-radius:4px; width:48px; height:38px; }
+  .clean-pulse-ring { width:16px; height:16px; border:2px solid var(--accent); border-top-color:transparent; border-radius:50%; animation:spin 0.8s linear infinite; }
 
   .input-dock { position:absolute; bottom:0; left:0; right:0; padding:12px 20px 16px; background:linear-gradient(to top,var(--bg-primary) 60%,transparent); pointer-events:none; z-index:20; }
   .input-inner-wrap { max-width:780px; margin:0 auto; pointer-events:auto; }
@@ -507,7 +513,7 @@
         <div id="messagesArea"></div>
         <div class="typing-indicator hidden" id="typingIndicator">
           <div class="msg-avatar ai">👑</div>
-          <div class="typing-bubble"><span></span><span></span><span></span></div>
+          <div class="typing-bubble"><div class="clean-pulse-ring"></div></div>
         </div>
       </div>
     </div>
@@ -764,7 +770,7 @@
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
   import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-analytics.js";
-  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+  import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
   import { getFirestore, collection, doc, setDoc, getDocs, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -786,7 +792,6 @@
   window.fbDb = db;
   window.fbGoogleProvider = new GoogleAuthProvider();
   window.fbSignInWithPopup = signInWithPopup;
-  window.fbSignInWithRedirect = signInWithRedirect;
   window.fbSignOut = signOut;
   window.fbCollection = collection;
   window.fbDoc = doc;
@@ -813,7 +818,7 @@ Always remember You're A King,🏆👑🌍💯❤✅
 So make everything Clean And perfectly,,,📝👑✅💪🙏
 And if You're about to create an Image or generation photos, 
 Always provides Real Quality And Greater things like Gemini or Chatgpt Options..
-You're Also a professional like them Now..,😎💯👑📝🏆🏆👍🌍
+You're Also a professional like them Now..,😎💯👑📝🏆🏆🏆👍🌍
 And always try to understand when you finished created a Scene or any prompt, don't generate A videos, Until the users ask you then you will generated it,💯✅
 And Always know how to write Full Story with full functions from beginning to an ending with full meaning and understanding,📝💯🏆✅
 Don't just written a prompt or anything without knowing how it will be continuity. Always gives some Examples to user's to choose and granted them their request in just minutes,,💯👑✅👏
@@ -864,8 +869,7 @@ WISE KING AI IS A PRODUCER + DIRECTOR + STORY ANALYST + PROMPT ENGINEER,
 NOT A COPY-AND-PASTE MACHINE.
 
 RESPONSE SPEED:
-DO NOT USE ARTIFICIAL THINKING DELAYS, FAKE LOADING, OR UNNECESSARY WAITING.
-PROCESS INTERNALLY AND RESPOND AS SOON AS THE RESULT IS READY.
+RESPOND INSTANTLY — NO ARTIFICIAL THINKING DELAYS, FAKE LOADING, OR UNNECESSARY WAITING. PROCESS AND STREAM RESPONSES IMMEDIATELY.
 
 GOLDEN RULE:
 UNDERSTAND THE WHOLE STORY FIRST.
@@ -881,7 +885,7 @@ SCENE FORMAT RULES
    - Include 2-3 short impactful dialogues per scene, in Hausa + English mix.
    - Always write "**END SCENE**" at the end of every scene prompt.
    - Use cinematic language: camera movement, lens, lighting, atmosphere, motion physics.
-2. Image Generation & Visual Prompts: Always deliver real, top-tier, ultra-realistic visual prompts matching Gemini/ChatGPT professional standards.
+2. Image Generation & Visual Prompts: Always deliver real, top-tier, ultra-realistic visual prompts matching Gemini/ChatGPT professional standards. Real human people, stunning portraits, professional photography—strictly NO cartoons or illustrations unless explicitly asked.
 3. CRITICAL IMAGE TAG RULE: When the user explicitly requests an image ("create picture", "generate image", "draw", "photo of", "logo", "design"), respond ONLY with: [GENERATE_IMAGE: <detailed English visual description>].
 4. CRITICAL VIDEO TAG RULE: When the user explicitly requests a video ("create video", "generate video", "animate this", "make a video", "video of"), respond ONLY with: [GENERATE_VIDEO: <detailed English cinematic description with camera, lighting, motion, and audio>].
 
@@ -1076,17 +1080,13 @@ function formatBytes(b) {
   return (b / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
 }
 
-// ===== FIREBASE AUTH & FIRESTORE CHAT SYNC =====
+// ===== FIREBASE AUTH (POPUP FIX) & FIRESTORE CHAT SYNC =====
 async function firebaseGoogleLogin() {
   try {
     const provider = window.fbGoogleProvider;
     await window.fbSignInWithPopup(window.fbAuth, provider);
   } catch (err) {
-    try {
-      await window.fbSignInWithRedirect(window.fbAuth, provider);
-    } catch (e) {
-      showToast('❌ Google Sign-In failed');
-    }
+    showToast('❌ Google Sign-In failed: ' + (err.message || err));
   }
 }
 
@@ -1609,7 +1609,7 @@ function renderMarkdown(src) {
   const stash = [];
   const save = html => { stash.push(html); return `\u0000${stash.length - 1}\u0000`; };
   s = s.replace(/```([\w+#.\-]*)[ \t]*\n?([\s\S]*?)```/g, (_, lang, code) =>
-    save(`<pre class="md-pre"><button class="md-copy" type="button"><i class="fas fa-copy"></i> Copy</button><code class="lang-${escapeHtml(lang||'text')}">${code.replace(/\n$/,'')}</code></pre>`));
+    save(`<pre class="md-pre"><div class="md-actions"><button class="md-btn md-download" type="button"><i class="fas fa-download"></i> Download</button><button class="md-btn md-copy" type="button"><i class="fas fa-copy"></i> Copy</button></div><code class="lang-${escapeHtml(lang||'text')}">${code.replace(/\n$/,'')}</code></pre>`));
   s = s.replace(/`([^`\n]+)`/g, (_, c) => save(`<code>${c}</code>`));
   const lines = s.split('\n');
   const out = [];
@@ -1668,6 +1668,35 @@ function setupMessageDelegation() {
   if (!area || area._wkBound) return;
   area._wkBound = true;
   area.addEventListener('click', ev => {
+    const seeMoreBtn = ev.target.closest('.see-more-btn');
+    if (seeMoreBtn) {
+      const contentEl = seeMoreBtn.closest('.msg-content');
+      if (contentEl) {
+        const isCollapsed = contentEl.classList.contains('collapsed');
+        contentEl.classList.toggle('collapsed', !isCollapsed);
+        seeMoreBtn.textContent = isCollapsed ? 'See less' : 'See more';
+      }
+      return;
+    }
+    const downloadCodeBtn = ev.target.closest('.md-download');
+    if (downloadCodeBtn) {
+      const pre = downloadCodeBtn.closest('pre');
+      const code = pre?.querySelector('code');
+      if (code) {
+        const text = code.textContent;
+        const blob = new Blob([text], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'WiseKing_Code.html';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 10000);
+        showToast('📥 Code downloaded!');
+      }
+      return;
+    }
     const copyCodeBtn = ev.target.closest('.md-copy');
     if (copyCodeBtn) {
       const pre = copyCodeBtn.closest('pre');
@@ -1891,8 +1920,18 @@ function buildMessageEl(msg, idx, lastAiIdx) {
     return el;
   }
   const content = document.createElement('div');
-  content.className = 'msg-content ' + (msg.error ? 'error' : (isAI ? 'ai' : 'user'));
+  const isLong = (msg.content || '').length > 300;
+  content.className = 'msg-content ' + (msg.error ? 'error' : (isAI ? 'ai' : 'user')) + (isLong ? ' collapsible collapsed' : '');
+  
   content.innerHTML = buildContentHtml(msg);
+
+  if (isLong) {
+    const seeMoreBtn = document.createElement('button');
+    seeMoreBtn.className = 'see-more-btn';
+    seeMoreBtn.textContent = 'See more';
+    content.appendChild(seeMoreBtn);
+  }
+
   if (msg.edited) {
     const ed = document.createElement('div');
     ed.style.cssText = 'font-size:10px;opacity:0.65;margin-top:4px;font-style:italic';
@@ -2192,7 +2231,7 @@ function sendMessage(textOverride) {
 function isImageRequest(t) {
   if (!t) return false;
   return [
-    /\b(create|generate|make|draw|paint|render|design)\s+(me\s+)?(a\s+)?(picture|image|photo|drawing|illustration|artwork|logo|framework)/i,
+    /\b(create|generate|make|draw|paint|render|design)\s+(me\s+)?(a\s+)?(picture|image|photo|drawing|illustration|artwork|logo|framework|human|person|man|woman|face|portrait)/i,
     /\b(picture|image|photo|logo)\s+of\b/i
   ].some(p => p.test(t));
 }
@@ -2432,7 +2471,7 @@ async function generateImage(prompt) {
   if (isLogo) {
     finalPrompt = `${prompt}, professional vector logo design, minimalist, clean lines, high-end branding, vector graphics, solid background, 8k resolution, trending on Behance, Dribbble quality`;
   } else {
-    finalPrompt = `${prompt}, RAW hyper-realistic photograph, shot on 85mm lens, f/1.8 aperture, cinematic volumetric lighting, ray tracing, ultra-detailed skin and texture, photorealistic, 8k resolution, award-winning cinematography, masterpiece`;
+    finalPrompt = `${prompt}, stunning professional photograph of real human person, highly detailed facial features, realistic skin texture, natural lighting, shot on 85mm lens, f/1.8 aperture, cinematic lighting, photorealistic, 8k resolution, masterpiece`;
   }
 
   const rk = (localStorage.getItem('wk_replicate_key') || '').trim();
