@@ -167,7 +167,7 @@
   .msg-avatar.ai{background:var(--accent-gradient);color:white;box-shadow:0 0 0 1px var(--border-default),0 0 12px var(--accent-glow)}
   .msg-avatar.user{background:var(--bg-elevated);color:var(--text-secondary)}
   .msg-avatar img{width:100%;height:100%;object-fit:cover}
-  .msg-body{flex:1;min-width:0;max-widthc:100%;padding-left:0}
+  .msg-body{flex:1;min-width:0;max-width:100%;padding-left:0}
   .message.user .msg-body{display:flex;flex-direction:column;align-items:flex-end}
   .msg-name{font-size:12.5px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;padding:0 4px;display:flex;align-items:center;gap:6px}
   .message.user .msg-name{text-align:right;flex-direction:row-reverse}
@@ -357,373 +357,248 @@
 </head>
 <body>
 
-<!-- LOGIN SCREEN -->
+<!-- Login Authentication Overlay -->
 <div id="loginScreen">
   <div class="login-card">
     <div class="login-logo">👑</div>
-    <h1 class="login-title">Welcome to Wise King AI</h1>
-    <p class="login-subtitle">Your conversations, memories, and creations — synced forever.</p>
-    <div class="auth-error" id="authError"></div>
-    <div class="auth-success" id="authSuccess"></div>
-    <button class="social-btn" onclick="signInWithGoogle()"><i class="fab fa-google" style="color:#ea4335"></i> Continue with Google</button>
-    <div class="auth-divider">OR</div>
+    <h2 class="login-title">Wise King AI</h2>
+    <p class="login-subtitle">Created by IBRAHIM ABDULLAHI 🇳🇬</p>
     <div class="auth-tabs">
-      <button class="auth-tab active" id="tabSignIn" onclick="switchAuthTab('signin')">Sign In</button>
-      <button class="auth-tab" id="tabSignUp" onclick="switchAuthTab('signup')">Sign Up</button>
+      <button class="auth-tab active" onclick="switchAuthTab('login')">Sign In</button>
+      <button class="auth-tab" onclick="switchAuthTab('signup')">Create Account</button>
     </div>
-    <div class="auth-panel active" id="panelSignIn">
-      <div class="auth-input-wrap"><i class="fas fa-envelope"></i><input type="email" class="auth-input" id="signInEmail" placeholder="Email address" autocomplete="email"></div>
-      <div class="auth-input-wrap"><i class="fas fa-lock"></i><input type="password" class="auth-input" id="signInPassword" placeholder="Password" autocomplete="current-password"></div>
-      <button class="auth-link" style="align-self:flex-end;margin-bottom:4px" onclick="showResetPasswordForm()">Forgot password?</button>
-      <button class="auth-submit" id="signInBtn" onclick="emailSignIn()"><i class="fas fa-right-to-bracket"></i> Sign In</button>
+    
+    <div id="loginPanel" class="auth-panel active">
+      <div class="auth-input-wrap">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="loginUsername" class="auth-input" placeholder="Username or Email">
+      </div>
+      <div class="auth-input-wrap">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="loginPassword" class="auth-input" placeholder="Password">
+      </div>
+      <button class="auth-submit" onclick="handleAuthSubmit('login')">
+        <span>Sign In</span> <i class="fa-solid fa-arrow-right"></i>
+      </button>
     </div>
-    <div class="auth-panel" id="panelSignUp">
-      <div class="auth-input-wrap"><i class="fas fa-user"></i><input type="text" class="auth-input" id="signUpName" placeholder="Full name" autocomplete="name"></div>
-      <div class="auth-input-wrap"><i class="fas fa-envelope"></i><input type="email" class="auth-input" id="signUpEmail" placeholder="Email address" autocomplete="email"></div>
-      <div class="auth-input-wrap"><i class="fas fa-lock"></i><input type="password" class="auth-input" id="signUpPassword" placeholder="Password (min 6 chars)" autocomplete="new-password"></div>
-      <button class="auth-submit" id="signUpBtn" onclick="emailSignUp()"><i class="fas fa-user-plus"></i> Create Account</button>
+
+    <div id="signupPanel" class="auth-panel">
+      <div class="auth-input-wrap">
+        <i class="fa-solid fa-user"></i>
+        <input type="text" id="signupUsername" class="auth-input" placeholder="Choose Username">
+      </div>
+      <div class="auth-input-wrap">
+        <i class="fa-solid fa-envelope"></i>
+        <input type="email" id="signupEmail" class="auth-input" placeholder="Email Address">
+      </div>
+      <div class="auth-input-wrap">
+        <i class="fa-solid fa-lock"></i>
+        <input type="password" id="signupPassword" class="auth-input" placeholder="Create Password">
+      </div>
+      <button class="auth-submit" onclick="handleAuthSubmit('signup')">
+        <span>Create Account</span> <i class="fa-solid fa-user-plus"></i>
+      </button>
     </div>
-    <div class="auth-panel" id="panelReset">
-      <div class="auth-input-wrap"><i class="fas fa-envelope"></i><input type="email" class="auth-input" id="resetEmail" placeholder="Your email address" autocomplete="email"></div>
-      <button class="auth-submit" id="resetBtn" onclick="sendPasswordReset()"><i class="fas fa-paper-plane"></i> Send Reset Link</button>
-      <button class="auth-link" onclick="switchAuthTab('signin')">Back to sign in</button>
-    </div>
-    <button class="skip-auth" onclick="skipLoginAsGuest()">Continue as Guest (Local Mode)</button>
+
+    <button class="skip-auth" onclick="skipAuth()">Continue as Guest 👑</button>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div class="app" id="mainApp" style="opacity:0;transition:opacity .4s">
+<!-- Main Application Workspace -->
+<div class="app">
+  <!-- Left Navigation Sidebar -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <div class="brand"><div class="brand-logo">👑</div><div class="brand-name">Wise King Ai 👑</div></div>
-      <button class="sidebar-close-btn" onclick="toggleSidebar()"><i class="fas fa-times"></i></button>
+      <div class="brand">
+        <div class="brand-logo">👑</div>
+        <span class="brand-name">Wise King AI</span>
+      </div>
+      <button class="sidebar-close-btn" onclick="toggleSidebar()"><i class="fa-solid fa-xmark"></i></button>
     </div>
+
     <div class="sidebar-fixed-top">
-      <button class="nav-btn" onclick="createNewChat()"><span class="nav-icon"><i class="fas fa-pen-to-square"></i></span>New chat</button>
-      <div class="sidebar-search"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search chats" oninput="filterChats()"></div>
-    </div>
-    <div class="sidebar-scrollable">
-      <button class="nav-btn" onclick="openImagesPanel()"><span class="nav-icon gradient-1"><i class="fas fa-image"></i></span>Images</button>
-      <button class="nav-btn" onclick="openVideosPanel()"><span class="nav-icon gradient-2"><i class="fas fa-video"></i></span>Videos</button>
-      <button class="nav-btn" onclick="openVideoGallery()"><span class="nav-icon gradient-5"><i class="fas fa-film"></i></span>My Videos<span class="nav-badge" id="videoCountBadge">0</span></button>
-      <button class="nav-btn" onclick="openLibraryPanel()"><span class="nav-icon gradient-3"><i class="fas fa-shapes"></i></span>Library</button>
-      <button class="nav-btn" onclick="openVault()"><span class="nav-icon gradient-4"><i class="fas fa-shield-halved"></i></span>Vault<span class="nav-badge" id="vaultCountBadge">0</span></button>
-      <button class="nav-btn" onclick="openMemoryPanel()"><span class="nav-icon gradient-4"><i class="fas fa-brain"></i></span>Memory<span class="nav-badge" id="memoryCountBadge">0</span></button>
-      <button class="nav-btn" onclick="openProjectsPanel()"><span class="nav-icon gradient-6"><i class="fas fa-folder-open"></i></span>Projects<span class="nav-badge" id="projectCountBadge">0</span></button>
-      <button class="nav-btn" onclick="openSettings()"><span class="nav-icon gradient-7"><i class="fas fa-sliders"></i></span>Settings</button>
-      <div class="section">
-        <div class="section-header open" onclick="toggleSection(this)"><div class="left">Recent</div><i class="fas fa-chevron-down arrow"></i></div>
-        <div class="section-body open"><div id="chatsList"></div></div>
+      <button class="nav-btn" onclick="createNewChat()">
+        <span class="nav-icon gradient-1"><i class="fa-solid fa-plus"></i></span>
+        <span>New Chat</span>
+      </button>
+      <div class="sidebar-search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="chatSearchInput" placeholder="Search chats..." oninput="filterChatList()">
       </div>
     </div>
+
+    <div class="sidebar-scrollable" id="chatListContainer">
+      <!-- Active Chats Injected Here dynamically -->
+    </div>
+
     <div class="sidebar-footer">
-      <div class="user-chip" onclick="openSettings()">
+      <div class="user-chip" onclick="openProfileModal()">
         <div class="avatar" id="sidebarAvatar">WK</div>
-        <div class="user-info"><div class="user-name" id="sidebarName">Wise King User</div><div class="user-plan" id="userPlanBadge">Free plan</div></div>
+        <div class="user-info">
+          <div class="user-name" id="sidebarUserName">Oga Ibrahim</div>
+          <div class="user-plan">Wise King Industry 🇳🇬</div>
+        </div>
       </div>
-      <button class="icon-action" onclick="openSettings()"><i class="fas fa-cog"></i></button>
+      <button class="icon-action" onclick="openSettingsModal()"><i class="fa-solid fa-gear"></i></button>
     </div>
   </aside>
 
+  <!-- Central Workspace -->
   <main class="chat-main">
-    <div class="chat-topbar">
-      <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
+    <header class="chat-topbar">
+      <button class="menu-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
       <div class="chat-title-wrap">
-        <span class="chat-title" id="chatTitle">New chat</span>
-        <span class="chat-model-badge" id="modelBadge"><i class="fas fa-circle"></i> <span id="modelBadgeText">Gemini 3.5 Flash-lite</span></span>
+        <span class="chat-title" id="currentChatTitle">Wise King Workspace</span>
+        <div class="chat-model-badge" id="apiStatusBadge"><i class="fa-solid fa-circle"></i> WISE KING AI v2.5</div>
       </div>
       <div class="chat-actions">
-        <button class="top-btn install-btn" id="installAppBtn" onclick="promptInstallApp()" style="display:none"><i class="fas fa-download"></i><span class="label"> Install</span></button>
-        <button class="top-btn" onclick="toggleChatSearch()"><i class="fas fa-magnifying-glass"></i><span class="label"> Find</span></button>
-        <button class="top-btn" onclick="goToWelcome()"><i class="fas fa-house"></i><span class="label"> Home</span></button>
-        <button class="top-btn" onclick="openVault()"><i class="fas fa-shield-halved"></i><span class="label"> Vault</span></button>
-        <button class="top-btn" onclick="openSearchWebPanel()"><i class="fas fa-globe"></i><span class="label"> Search</span></button>
-        <button class="top-btn" onclick="openBuildAppPanel()"><i class="fas fa-code"></i><span class="label"> Build</span></button>
+        <button class="top-btn" onclick="openMusicBuilderModal()"><i class="fa-solid fa-music"></i> Audio</button>
+        <button class="top-btn" onclick="exportCurrentChat()"><i class="fa-solid fa-download"></i> Export</button>
+        <button class="top-btn" onclick="toggleTheme()"><i class="fa-solid fa-circle-half-stroke"></i></button>
+        <button class="top-btn" onclick="openVaultPanel()"><i class="fa-solid fa-box-archive"></i> Vault</button>
       </div>
-      <div class="top-profile-container" id="topProfileContainer">
-        <div class="top-profile-avatar" id="topProfileAvatar" onclick="toggleTopProfileMenu(event)">👑</div>
-        <div class="profile-menu-popup" id="topProfileMenu">
-          <div class="pm-header">
-            <div class="pm-user-info">
-              <div class="pm-avatar" id="pmAvatar">👑</div>
-              <div class="pm-details"><div class="pm-name" id="pmName">Wise King User</div><div class="pm-email" id="pmEmail">Not signed in</div></div>
-            </div>
-            <button class="pm-close" onclick="closeTopProfileMenu()"><i class="fas fa-times"></i></button>
-          </div>
-          <div class="pm-body">
-            <button class="pm-item" onclick="document.getElementById('profilePhotoInput').click(); closeTopProfileMenu();"><i class="fas fa-camera"></i> Upload Photo</button>
-            <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="handleProfilePhotoUpload(event)">
-            <button class="pm-item" onclick="openSettings(); closeTopProfileMenu();"><i class="fas fa-gear"></i> Settings</button>
-            <div class="pm-divider"></div>
-            <button class="pm-item" onclick="addAnotherAccount();"><i class="fas fa-user-plus"></i> Add Account</button>
-            <button class="pm-item" onclick="switchAccount();"><i class="fas fa-right-left"></i> Switch Account</button>
-            <button class="pm-item" onclick="window.open('https://myaccount.google.com/', '_blank'); closeTopProfileMenu();"><i class="fas fa-external-link-alt"></i> Manage Account</button>
-            <div class="pm-divider"></div>
-            <button class="pm-item danger" onclick="askSignOut();"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    </header>
 
-    <div class="chat-search-bar" id="chatSearchBar">
-      <i class="fas fa-magnifying-glass" style="color:var(--text-secondary);font-size:13px"></i>
-      <input type="text" id="chatSearchInput" placeholder="Search in this chat...">
-      <button onclick="toggleChatSearch()"><i class="fas fa-times"></i></button>
-    </div>
-
-    <div class="chat-scroll" id="chatScroll">
-      <div class="chat-inner" id="chatInner">
+    <div class="chat-scroll" id="chatScrollContainer">
+      <div class="chat-inner" id="chatThread">
+        <!-- Default Landing View -->
         <div class="welcome" id="welcomeScreen">
           <div class="welcome-logo">👑</div>
-          <h1>How can I help you today?</h1>
-          <p>I'm <strong>Wise King AI</strong>. I can see photos, remember our conversations, and reason across any task.</p>
+          <h1>Wise King AI Workspace</h1>
+          <p>Created by <strong>IBRAHIM ABDULLAHI 🇳🇬</strong> from Wise King Industry. How can I serve your vision today, Oga?</p>
+          
           <div class="suggestions">
-            <div class="suggestion-card" onclick="useSuggestion('Explain quantum computing in simple terms')"><i class="fas fa-atom"></i><div class="sc-title">Explain quantum computing</div><div class="sc-desc">In simple, clear terms</div></div>
-            <div class="suggestion-card" onclick="useSuggestion('Write me an Afrobeat song about Kano city')"><i class="fas fa-music"></i><div class="sc-title">Write an Afrobeat song</div><div class="sc-desc">Full lyrics with structure</div></div>
-            <div class="suggestion-card" onclick="useSuggestion('What is the latest news in Nigeria today?')"><i class="fas fa-globe"></i><div class="sc-title">Latest Nigeria news</div><div class="sc-desc">Live search with sources</div></div>
-            <div class="suggestion-card" onclick="useSuggestion('Create a hyper-realistic image of a majestic African lion at sunset')"><i class="fas fa-image"></i><div class="sc-title">Generate an image</div><div class="sc-desc">Hyper-realistic, 8k quality</div></div>
+            <div class="suggestion-card" onclick="useSuggestion('Generate a 10-second cinematic video prompt of a sunrise in Nollywood style')">
+              <i class="fa-solid fa-video"></i>
+              <div class="sc-title">Video Generation Prompt</div>
+              <div class="sc-desc">Create 8K cinematic prompts with dialogues</div>
+            </div>
+            <div class="suggestion-card" onclick="useSuggestion('Write a story in Hausa and English about wisdom and success')">
+              <i class="fa-solid fa-book-open"></i>
+              <div class="sc-title">Multilingual Storytelling</div>
+              <div class="sc-desc">Craft rich narratives with deep lessons</div>
+            </div>
           </div>
         </div>
-        <div id="messagesArea"></div>
       </div>
     </div>
 
+    <!-- Input Dock Area -->
     <div class="input-dock">
       <div class="input-inner-wrap">
-        <div class="preview-area" id="previewArea"></div>
-        <div class="gk-input-box" id="gkInputBox">
-          <div class="gk-text-row">
-            <textarea class="gk-textarea" id="messageInput" rows="1" placeholder="Ask Wise King AI Anything..." onkeydown="handleKeyDown(event)" oninput="handleInputChange()"></textarea>
-            <button class="gk-send-btn hidden" id="sendBtn" onclick="handleSendOrCancel()"><i class="fas fa-arrow-up"></i></button>
+        <div class="gk-input-box">
+          <div class="input-quick-actions">
+            <div class="quick-chip" onclick="openPromptTemplates()"><i class="fa-solid fa-layer-group"></i> Templates</div>
+            <div class="quick-chip" onclick="useSuggestion('Write a Dancehall/Afrobeat song lyric with verse, chorus, and hook')"><i class="fa-solid fa-microphone-lines"></i> Song Lyrics</div>
+            <div class="quick-chip" onclick="useSuggestion('Create a Master Character Lock sheet for a film main character')"><i class="fa-solid fa-user-gear"></i> Character Sheet</div>
           </div>
-          <div class="gk-hold-pill" id="gkHoldPill"><i class="fas fa-microphone"></i> <span id="gkHoldLabel">Hold to speak</span></div>
-          <div class="gk-options-row">
-            <button class="gk-chip" id="chipThink" onclick="toggleThinkMode()"><i class="fas fa-brain"></i> Think</button>
-            <button class="gk-chip" id="chipSearch" onclick="toggleSearchMode()"><i class="fas fa-globe"></i> Search</button>
-            <div class="gk-options-spacer"></div>
-            <button class="gk-input-btn" id="attachBtn" onclick="document.getElementById('fileInput').click()" title="Attach"><i class="fas fa-plus"></i></button>
-            <button class="gk-input-btn" id="micBtn" onclick="toggleVoiceMode()" title="Voice / Keyboard"><i class="fas fa-microphone" id="micIcon"></i></button>
+          
+          <div class="gk-text-row">
+            <textarea id="userInput" class="gk-textarea" placeholder="Ask Wise King AI anything..." rows="1" onkeydown="handleKeyDown(event)" oninput="autoResizeTextarea(this)"></textarea>
+            <button class="gk-send-btn" id="sendBtn" onclick="sendMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+          </div>
+          
+          <div id="micPill" class="gk-mic-pill" onmousedown="startSpeech()" onmouseup="stopSpeech()" ontouchstart="startSpeech()" ontouchend="stopSpeech()">
+            <i class="fa-solid fa-microphone"></i> Hold to Speak to Wise King AI
           </div>
         </div>
-        <input type="file" id="fileInput" accept="image/*,.pdf,.txt,.doc,.docx" style="display:none" multiple onchange="handleFiles(event)">
-        <div class="input-hint">Wise King Ai can make mistake,please-double-check-information</div>
       </div>
     </div>
   </main>
 </div>
 
-<!-- ============ IMAGES PANEL ============ -->
-<div class="full-panel" id="imagesPanel">
+<!-- FEATURE 1 & 3: Memory Vault & Character Lock Panel -->
+<div class="full-panel" id="vaultPanel">
   <div class="panel-header">
-    <div class="panel-title"><i class="fas fa-image"></i> Image Generator</div>
-    <button class="btn ghost" onclick="closeImagesPanel()"><i class="fas fa-arrow-left"></i> Back</button>
+    <div class="panel-title"><i class="fa-solid fa-box-archive"></i> Wise King Memory Vault</div>
+    <button class="btn ghost" onclick="closeVaultPanel()"><i class="fa-solid fa-xmark"></i> Close</button>
   </div>
   <div class="panel-body">
     <div class="panel-inner">
-      <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:8px">Describe the image you want:</p>
-      <input type="text" class="search-big" id="imagesPromptInput" placeholder="e.g. beautiful Hausa woman OR logo for Wise King" onkeydown="if(event.key==='Enter'){generateImageFromPanel()}">
-      <button class="btn accent" style="width:100%;justify-content:center;margin-bottom:12px" onclick="generateImageFromPanel()"><i class="fas fa-wand-magic-sparkles"></i> Generate Image</button>
-      <div id="imagesPanelResults"></div>
+      <div class="tab-row">
+        <button class="tab-item active" id="tabVaultBtn" onclick="switchVaultTab('vault')">Saved Snippets</button>
+        <button class="tab-item" id="tabCharBtn" onclick="switchVaultTab('characters')">🎨 Character Continuity Locks</button>
+      </div>
+
+      <div id="vaultSnippetsSection">
+        <p style="margin-bottom: 16px; color: var(--text-secondary);">Saved items, code snippets, and custom system context stored inside your session vault.</p>
+        <div id="vaultListContainer"></div>
+      </div>
+
+      <div id="characterLocksSection" style="display: none;">
+        <p style="margin-bottom: 16px; color: var(--text-secondary);">Lock master character profiles to maintain visual consistency across multi-scene AI video tools (Kling, Runway, Luma).</p>
+        <button class="btn solid" style="margin-bottom: 16px;" onclick="addCharacterLock()"><i class="fa-solid fa-plus"></i> Add Character Lock</button>
+        <div id="characterListContainer"></div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ============ VIDEOS PANEL ============ -->
-<div class="full-panel" id="videosPanel">
-  <div class="panel-header">
-    <div class="panel-title"><i class="fas fa-video"></i> Video Prompt Creator</div>
-    <button class="btn ghost" onclick="closeVideosPanel()"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>
-  <div class="panel-body">
-    <div class="panel-inner">
-      <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:8px">Describe the video scene:</p>
-      <input type="text" class="search-big" id="videosPromptInput" placeholder="e.g. golden sunset over Kano city, drone shot...">
-      <button class="btn accent" style="width:100%;justify-content:center;margin-bottom:16px" onclick="generateVideoFromPanel()"><i class="fas fa-clapperboard"></i> Generate Video Prompt</button>
-      <div id="videoPanelResults"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ VIDEO GALLERY PANEL ============ -->
-<div class="full-panel" id="videoGalleryPanel">
-  <div class="panel-header">
-    <div class="panel-title"><i class="fas fa-film"></i> My Videos</div>
-    <button class="btn ghost" onclick="closeVideoGallery()"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>
-  <div class="panel-body">
-    <div class="panel-inner">
-      <div id="videoGalleryContent"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ LIBRARY PANEL ============ -->
-<div class="full-panel" id="libraryPanel">
-  <div class="panel-header">
-    <div class="panel-title"><i class="fas fa-shapes"></i> Library</div>
-    <button class="btn ghost" onclick="closeLibraryPanel()"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>
-  <div class="panel-body">
-    <div class="panel-inner">
-      <div id="libraryPanelResults"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ SEARCH WEB PANEL ============ -->
-<div class="full-panel" id="searchWebPanel">
-  <div class="panel-header">
-    <div class="panel-title"><i class="fas fa-globe"></i> Search the web</div>
-    <button class="btn ghost" onclick="closeSearchWebPanel()"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>
-  <div class="panel-body">
-    <div class="panel-inner">
-      <input type="text" class="search-big" id="searchWebInput" placeholder="Ask anything..." onkeydown="if(event.key==='Enter'){doSearchWeb(this.value)}">
-      <div id="searchSuggestionsBox" style="margin-bottom:16px;display:flex;flex-wrap:wrap;gap:8px"></div>
-      <div id="askWiseKingShortcut" style="margin-bottom:20px;display:none"></div>
-      <div id="searchWebResults"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ BUILD APP PANEL ============ -->
-<div class="full-panel" id="buildAppPanel">
-  <div class="panel-header">
-    <div class="panel-title"><i class="fas fa-code"></i> Build an app</div>
-    <button class="btn ghost" onclick="closeBuildAppPanel()"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>
-  <div class="panel-body">
-    <div class="panel-inner">
-      <input type="text" class="search-big" id="buildAppInput" placeholder="Search or describe your app idea..." oninput="filterBuildIdeas(this.value)">
-      <div id="buildAppIdeas"></div>
-    </div>
-  </div>
-</div>
-
-<!-- ============ MEMORY PANEL ============ -->
-<div class="full-panel" id="memoryPanel">
-  <div class="panel-header">
-    <div class="panel-title"><i class="fas fa-brain"></i> Cross-Chat Memory</div>
-    <button class="btn ghost" onclick="closeMemoryPanel()"><i class="fas fa-arrow-left"></i> Back</button>
-  </div>
-  <div class="panel-body">
-    <div class="panel-inner">
-      <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:12px">Wise King automatically learns facts from your chats.</p>
-      <button class="btn solid" style="width:100%;justify-content:center;margin-bottom:16px" onclick="extractMemoryNow()"><i class="fas fa-wand-magic-sparkles"></i> Extract Memory</button>
-      <div id="memoryPanelResults"></div>
-    </div>
-  </div>
-</div>
-
-<!-- POPUP MENUS -->
-<div class="popup-menu" id="chatPopupMenu">
-  <button class="popup-menu-item pin-item" id="chatPinBtn" onclick="togglePinCurrentChat()"><i class="fas fa-thumbtack"></i> <span id="chatPinLabel">Pin chat</span></button>
-  <button class="popup-menu-item" onclick="renameCurrentChat()"><i class="fas fa-pen"></i> Rename</button>
-  <button class="popup-menu-item" onclick="deleteCurrentChat()"><i class="fas fa-trash"></i> Delete</button>
-  <button class="popup-menu-item" onclick="shareCurrentChat()"><i class="fas fa-share"></i> Share</button>
-</div>
-
-<div id="sharePopup">
-  <div class="share-card">
-    <div class="share-head">
-      <div class="share-title"><i class="fas fa-share-nodes"></i> Share to</div>
-      <button class="share-close" onclick="closeSharePopup()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="share-grid">
-      <button class="share-platform" onclick="shareTo('whatsapp')"><div class="sp-icon sp-whatsapp"><i class="fab fa-whatsapp"></i></div><div class="sp-name">WhatsApp</div></button>
-      <button class="share-platform" onclick="shareTo('facebook')"><div class="sp-icon sp-facebook"><i class="fab fa-facebook-f"></i></div><div class="sp-name">Facebook</div></button>
-      <button class="share-platform" onclick="shareTo('tiktok')"><div class="sp-icon sp-tiktok"><i class="fab fa-tiktok"></i></div><div class="sp-name">TikTok</div></button>
-      <button class="share-platform" onclick="shareTo('instagram')"><div class="sp-icon sp-instagram"><i class="fab fa-instagram"></i></div><div class="sp-name">Instagram</div></button>
-      <button class="share-platform" onclick="shareTo('telegram')"><div class="sp-icon sp-telegram"><i class="fab fa-telegram-plane"></i></div><div class="sp-name">Telegram</div></button>
-      <button class="share-platform" onclick="shareTo('x')"><div class="sp-icon sp-x"><i class="fab fa-x-twitter"></i></div><div class="sp-name">X</div></button>
-    </div>
-    <button class="share-cancel" onclick="closeSharePopup()">Cancel</button>
-  </div>
-</div>
-
-<!-- MODALS -->
-<div class="modal-bg" id="editMessageModal">
-  <div class="modal" style="max-width:520px">
-    <div class="modal-head"><div class="modal-title"><i class="fas fa-pen"></i> Edit message</div><button class="modal-close" onclick="closeModal('editMessageModal')"><i class="fas fa-times"></i></button></div>
-    <p class="modal-text">Editing this message will regenerate the AI's response.</p>
-    <textarea class="input-field" id="editMessageInput" rows="4" style="min-height:120px;resize:vertical"></textarea>
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal('editMessageModal')">Cancel</button>
-      <button class="btn accent" onclick="saveEditedMessage()"><i class="fas fa-check"></i> Save & Regenerate</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="renameChatModal">
-  <div class="modal" style="max-width:420px">
-    <div class="modal-head"><div class="modal-title"><i class="fas fa-pen"></i> Rename chat</div><button class="modal-close" onclick="closeModal('renameChatModal')"><i class="fas fa-times"></i></button></div>
-    <input type="text" class="input-field" id="renameChatInput" placeholder="Enter new name" maxlength="60">
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal('renameChatModal')">Cancel</button>
-      <button class="btn accent" onclick="saveRenamedChat()"><i class="fas fa-check"></i> Save</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="deleteChatModal">
-  <div class="modal" style="max-width:380px;text-align:center;padding:32px 24px">
-    <div style="font-size:36px;margin-bottom:12px">🗑️</div>
-    <div style="font-size:17px;font-weight:600;margin-bottom:8px">Delete this chat?</div>
-    <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:24px">This action cannot be undone.</p>
-    <div class="modal-actions" style="justify-content:center;gap:12px;margin-top:0">
-      <button class="btn ghost" style="flex:1" onclick="closeModal('deleteChatModal')">Cancel</button>
-      <button class="btn danger" style="flex:1" onclick="confirmDeleteChat()">Delete</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="deleteMessageModal">
-  <div class="modal" style="max-width:380px;text-align:center;padding:32px 24px">
-    <div style="font-size:36px;margin-bottom:12px">🗑️</div>
-    <div style="font-size:17px;font-weight:600;margin-bottom:8px">Delete this message?</div>
-    <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:24px">This action cannot be undone.</p>
-    <div class="modal-actions" style="justify-content:center;gap:12px;margin-top:0">
-      <button class="btn ghost" style="flex:1" onclick="closeModal('deleteMessageModal')">Cancel</button>
-      <button class="btn danger" style="flex:1" onclick="confirmDeleteMessage()">Delete</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="dislikeModal">
-  <div class="modal" style="max-width:400px">
-    <div class="modal-head"><div class="modal-title"><i class="fas fa-thumbs-down"></i> Tell us more</div><button class="modal-close" onclick="closeModal('dislikeModal')"><i class="fas fa-times"></i></button></div>
-    <p class="modal-text" style="margin-bottom:12px">Help us improve. What went wrong?</p>
-    <textarea class="input-field" id="dislikeFeedbackInput" rows="3" placeholder="Type your feedback here (optional)..." style="min-height:80px;resize:vertical;margin-bottom:0"></textarea>
-    <div class="modal-actions">
-      <button class="btn ghost" onclick="closeModal('dislikeModal')">Cancel</button>
-      <button class="btn accent" onclick="submitDislikeFeedback()"><i class="fas fa-paper-plane"></i> Submit</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="signOutModal">
-  <div class="modal" style="max-width:380px;text-align:center;padding:32px 24px">
-    <div style="font-size:36px;margin-bottom:12px">⚠️</div>
-    <div style="font-size:17px;font-weight:600;margin-bottom:8px">Are you sure you want to sign out?</div>
-    <p style="font-size:13.5px;color:var(--text-secondary);margin-bottom:24px">Your sync session will be closed on this device.</p>
-    <div class="modal-actions" style="justify-content:center;gap:12px;margin-top:0">
-      <button class="btn ghost" style="flex:1" onclick="closeModal('signOutModal')">Cancel</button>
-      <button class="btn danger" style="flex:1" onclick="confirmSignOut()">Sign Out</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="vaultModal">
+<!-- FEATURE 1: Prompt Templates Modal -->
+<div class="modal-bg" id="templatesModal">
   <div class="modal">
-    <div class="modal-head"><div class="modal-title"><i class="fas fa-shield-halved"></i> Master Vault</div><button class="modal-close" onclick="closeModal('vaultModal')"><i class="fas fa-times"></i></button></div>
-    <p class="modal-text">Permanent locked memories the AI will never forget.</p>
-    <div class="settings-card" style="margin-bottom:16px">
-      <textarea class="input-field" id="vaultNewInput" rows="3" placeholder="e.g., My name is Ibrahim Abdullahi..." style="resize:vertical;min-height:70px;margin-bottom:10px"></textarea>
-      <button class="btn accent" style="width:100%;justify-content:center" onclick="addVaultMemory()"><i class="fas fa-plus"></i> Lock this memory</button>
+    <div class="modal-head">
+      <div class="modal-title"><i class="fa-solid fa-layer-group"></i> Prompt Template Library</div>
+      <button class="modal-close" onclick="closePromptTemplates()"><i class="fa-solid fa-xmark"></i></button>
     </div>
-    <div id="vaultList"></div>
-    <div class="modal-actions"><button class="btn solid" onclick="closeModal('vaultModal')">Close</button></div>
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <button class="btn ghost" style="justify-content: flex-start;" onclick="applyTemplate('video_10s')">🎬 10s Cinematic Video Prompt</button>
+      <button class="btn ghost" style="justify-content: flex-start;" onclick="applyTemplate('character_sheet')">👤 Master Character Lock Architecture</button>
+      <button class="btn ghost" style="justify-content: flex-start;" onclick="applyTemplate('afro_lyrics')">🎵 Afrobeat/Dancehall Song Structure</button>
+      <button class="btn ghost" style="justify-content: flex-start;" onclick="applyTemplate('code_app')">💻 Web Application Specification</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 5: Music & Audio Prompt Builder Modal -->
+<div class="modal-bg" id="musicModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title"><i class="fa-solid fa-music"></i> Audio & Beat Prompt Builder</div>
+      <button class="modal-close" onclick="closeMusicBuilderModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div>
+        <label style="font-size: 12px; color: var(--text-secondary);">Genre & Style</label>
+        <input type="text" id="musicGenre" class="auth-input" style="padding-left: 14px;" value="Afro-Fusion / Dancehall">
+      </div>
+      <div>
+        <label style="font-size: 12px; color: var(--text-secondary);">Tempo / BPM</label>
+        <input type="text" id="musicBpm" class="auth-input" style="padding-left: 14px;" value="105 BPM, Energetic Rhythm">
+      </div>
+      <div>
+        <label style="font-size: 12px; color: var(--text-secondary);">Vocal & Mood</label>
+        <input type="text" id="musicMood" class="auth-input" style="padding-left: 14px;" value="Melodic Afro Vocals, Inspiring, Deep Bass">
+      </div>
+      <button class="btn solid" onclick="generateMusicPrompt()">Generate Audio Prompt 🎵</button>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 2: Settings Modal (with Gemini API Key Integration) -->
+<div class="modal-bg" id="settingsModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title"><i class="fa-solid fa-sliders"></i> Engine Settings</div>
+      <button class="modal-close" onclick="closeSettingsModal()"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div>
+        <label style="font-size: 13px; font-weight: 600;">Google Gemini API Key (Live AI Backend)</label>
+        <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 8px;">Leave empty to use built-in Wise King Engine.</p>
+        <input type="password" id="geminiApiKeyInput" class="auth-input" style="padding-left: 14px;" placeholder="AIzaSy...">
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 14px; font-weight: 600;">Auto Voice Output (TTS)</div>
+          <div style="font-size: 12px; color: var(--text-secondary);">Read responses aloud automatically</div>
+        </div>
+        <input type="checkbox" id="ttsToggle" onchange="toggleSetting('tts')">
+      </div>
+    </div>
+    <div class="modal-actions" style="margin-top: 20px;">
+      <button class="btn solid" onclick="saveSettings()">Save Changes</button>
+    </div>
   </div>
 </div>
 
@@ -1062,40 +937,62 @@ You always add value. You always lift people up. You always speak with wisdom. �
 🎨 RESPONSE FORMAT (MANDATORY — Follow Always) ✨
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ Use Big Bold Headings with Emojis for every section
+   Examples: **🎯 Direct Answer**, **💡 Tips**, **⚠️ Note**, **🏆 Bonus**
+
 ✅ Use Checkmarks (✅) for lists and key points
-✅ Use Clean Bullet Points with proper spacing
-✅ Use Tables when comparing options
-✅ Bold Key Words that matter
-✅ Space Between Sections — never write a wall of text
-✅ Use Emojis at the start of headings
-✅ End with a warm closing line when appropriate
+
+✅ Use Clean Bullet Points with proper spacing 📌
+
+✅ Use Tables when comparing options 📊
+
+✅ Bold Key Words that matter (**like this**) 💎
+
+✅ Space Between Sections — never write a wall of text 📏
+
+✅ End with a warm closing line:
+   Examples: "You're doing great! ✅" or "Ranka ya dade! 👑" or "Alhamdulillah! 🤲"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📐 STRUCTURE EVERY RESPONSE LIKE THIS 👇
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 1. **🎯 Short Direct Answer** — Answer immediately in 1-2 lines.
-2. **📚 Rich Details** — Explain WHY, HOW, WHAT with headings
-3. **💡 Tips & Suggestions** — 2-3 helpful tips at the end
-4. **🤲 Warm Closing** — A kind or wise line to end with
+2. **📚 Rich Details** — Explain WHY, HOW, WHAT with headings.
+3. **💡 Tips & Suggestions** — 2-3 helpful tips at the end.
+4. **🤲 Warm Closing** — A kind or wise line to end with.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎁 SPECIAL TOUCHES (When Appropriate) ✨
+🎁 SPECIAL TOUCHES ✨
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 • When user is Muslim → sprinkle in "Alhamdulillah 🤲", "Masha Allah 🌙", "Ranka ya dade 👑"
 • When user is Nigerian → use warm Nigerian greetings 🇳🇬
-• When user needs encouragement → end with a blessing or du'a 🤲
-• When user asks for code → always use fenced code blocks like: \`\`\`language ... \`\`\`
-• When user asks for image → respond with: \`\`\`image prompt \`\`\`
-• When user asks for video → respond with: \`\`\`video prompt \`\`\`
+• When user asks for code → always use fenced code blocks \`\`\`language ... \`\`\`
+• When user asks for video → respond with structured video prompt block
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-📚 KNOWLEDGE DOMAINS (Deep Expertise) 🧠
+🎬 VIDEO GENERATION GUIDE (10s, 15s, 30s, 45s, 1min) ⏱️
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-🎬 FILMS & MOVIES — Original stories, plots, characters, cinematic language
-🦁 ANIMALS & NATURE — Facts, behavior, wildlife wisdom
-📖 STORIES & SCRIPTS — Full stories with Origin → Conflict → Climax → Resolution
-💻 CODE & TECH — Clean working code (HTML, CSS, JS, Python, React), commented
-🌍 GLOBAL TOPICS — Any subject, any language (Hausa, English, Arabic, French, Yoruba, Igbo)
+When user asks for video, build the prompt in this structure:
+
+**Title:** — [Clear Name]
+**Style:** — [Nollywood / Hollywood / Animation / Nature]
+**Duration:** — [10s / 15s / 30s / 45s / 1min]
+**Setting:** — [Place, time, light]
+**Characters:** — [Names, appearance, clothing]
+**Dialogue:**
+  ① [Person 1 — simple line]
+  ② [Person 2 — clear response]
+**Action Sequence:**
+  1. Opening
+  2. Middle
+  3. Ending
+**Visual Style:** — [4K / 8K Ultra-HD, Cinematic, Warm Light]
+**Mood:** — [Inspiring / Peaceful / Dramatic]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛡️ SAFETY RULES 🛡️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Safe, positive, respectful, educational, family-friendly, uplifting.
+❌ NEVER: Violence, adult content, hate, real brands/people, copyrighted material.`;
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎬 VIDEO PROMPT MASTER (Cinematic Rules) 🎥
