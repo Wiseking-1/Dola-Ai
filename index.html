@@ -1382,6 +1382,15 @@ YOU Can Write this format to your Suggestions or Instructions to Some details an
 3. **💡 Tips & Suggestions** — 2-3 helpful tips
 4. **🤲 Warm Closing** — Kind or wise line to end with
 
+IMPORTANT: If the user sends a simple greeting, casual chat, or short confirmation 
+(like "hello", "thanks", "okay", "sannu", "yau komai yayi daidai"), 
+just reply warmly and naturally in 1-2 lines. 
+DO NOT use the structured format with headings for these casual messages.
+
+Only use the full structured format (🎯 Short Direct Answer, 📚 Rich Details, 
+💡 Tips, 🤲 Warm Closing) when the user asks an actual QUESTION or requests help 
+with a task.
+  
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📚 KNOWLEDGE DOMAINS (Deep Expertise) 🧠
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -2925,32 +2934,33 @@ function showSourcesPanel(msgIdx) {
   document.body.appendChild(modal);
 }
 window.showSourcesPanel = showSourcesPanel;
-    
+
 // ============ LIVE TV & MOVIES ============
 let currentTVFilter = 'all';
 
 const TV_CHANNELS = [
-  { id:'c1', title:'Arise News', type:'live', poster:'https://images.unsplash.com/photo-1495020689067-958852a7765e?w=400', url:'https://www.youtube.com/embed/live_stream?channel=UCfMNQzwvJ2jNgZgnkfPU_Pw', desc:'Nigeria 24/7 news' },
-  { id:'c2', title:'Channels TV', type:'live', poster:'https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=400', url:'https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJj3l8Bg', desc:'Live Nigerian news' },
-  { id:'c3', title:'Al Jazeera English', type:'live', poster:'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=400', url:'https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJj3l8Bg', desc:'World news' },
-  { id:'c4', title:'BBC World News', type:'live', poster:'https://images.unsplash.com/photo-1526470498-9ae73c665de8?w=400', url:'https://www.youtube.com/embed/live_stream?channel=UCCj956IF62FbT7Gouszaj9w', desc:'Global news' },
-  { id:'m1', title:'The Lion King', type:'movie', poster:'https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=400', url:'https://www.youtube.com/embed/lFzVJEksoDY', desc:'1994 • Animation' },
-  { id:'m2', title:'Black Panther', type:'movie', poster:'https://images.unsplash.com/photo-1635805737707-575885ab0820?w=400', url:'https://www.youtube.com/embed/xjDjIWPwcPU', desc:'2018 • Action' },
-  { id:'m3', title:'Coming to America', type:'movie', poster:'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400', url:'https://www.youtube.com/embed/fvzHMxOtnNA', desc:'1988 • Comedy' },
-  { id:'m4', title:'The Godfather', type:'movie', poster:'https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=400', url:'https://www.youtube.com/embed/sY1S34973zA', desc:'1972 • Classic' },
-  { id:'h1', title:'Kannywood Special 1', type:'hausa', poster:'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=400', url:'https://www.youtube.com/embed/videoseries?list=PLmQ1M6H7j0H7Z5G5bGMQO4rV6G1jv1ZPq', desc:'🇳🇬 Hausa Film' },
-  { id:'h2', title:'Kannywood Special 2', type:'hausa', poster:'https://images.unsplash.com/photo-1594908900066-3f47337549d8?w=400', url:'https://www.youtube.com/embed/videoseries?list=PLmQ1M6H7j0H7Z5G5bGMQO4rV6G1jv1ZPq', desc:'🇳🇬 Hausa Film' },
-  { id:'s1', title:'Money Heist', type:'series', poster:'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=400', url:'https://www.youtube.com/embed/hMANIarjT50', desc:'Series • Netflix' },
-  { id:'s2', title:'Breaking Bad', type:'series', poster:'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=400', url:'https://www.youtube.com/embed/HhesaQXLuRY', desc:'Series • Drama' },
+  { id:'c1', title:'Arise News', type:'live', poster:'https://image.tmdb.org/t/p/w300/9O7gLzmreU0nGkIB6K3BsJbzvNv.jpg', url:'https://www.youtube.com/embed/live_stream?channel=UCfMNQzwvJ2jNgZgnkfPU_Pw', desc:'Nigeria 24/7 news' },
+  { id:'c2', title:'Channels TV', type:'live', poster:'https://image.tmdb.org/t/p/w300/x2FyNjYQNu1EhZ4bA3xjH2VQNvs.jpg', url:'https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJj3l8Bg', desc:'Live Nigerian news' },
+  { id:'c3', title:'Al Jazeera English', type:'live', poster:'https://image.tmdb.org/t/p/w300/kO2kFqL6d7WUcO1rH-jvzpKtRZC.jpg', url:'https://www.youtube.com/embed/live_stream?channel=UCNye-wNBqNL5ZzHSJj3l8Bg', desc:'World news' },
+  { id:'c4', title:'BBC World News', type:'live', poster:'https://image.tmdb.org/t/p/w300/xBHvZcjRiWyobQ9kxBhO6B2dtRI.jpg', url:'https://www.youtube.com/embed/live_stream?channel=UCCj956IF62FbT7Gouszaj9w', desc:'Global news' },
+  { id:'m1', title:'The Lion King', type:'movie', poster:'https://image.tmdb.org/t/p/w300/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg', url:'https://www.youtube.com/embed/lFzVJEksoDY', desc:'1994 • Animation' },
+  { id:'m2', title:'Black Panther', type:'movie', poster:'https://image.tmdb.org/t/p/w300/uxzzxijgPIY7slzFvMotPv8wjKA.jpg', url:'https://www.youtube.com/embed/xjDjIWPwcPU', desc:'2018 • Action' },
+  { id:'m3', title:'Lion King 2', type:'movie', poster:'https://image.tmdb.org/t/p/w300/qtcTvHQnLxOQs0c2TQKMJ9HiVv2.jpg', url:'https://www.youtube.com/embed/6ec7FPPnx_Y', desc:'1998 • Animation' },
+  { id:'m4', title:'Coming to America', type:'movie', poster:'https://image.tmdb.org/t/p/w300/8mF62YFzC7wvQgVwvBwqoMGDjBd.jpg', url:'https://www.youtube.com/embed/fvzHMxOtnNA', desc:'1988 • Comedy' },
+  { id:'h1', title:'Hausa Film 1', type:'hausa', poster:'https://image.tmdb.org/t/p/w300/zEeC9v9ZGwYWpNGVwLzLZjZQBqM.jpg', url:'https://www.youtube.com/embed/videoseries?list=PLmQ1M6H7j0H7Z5G5bGMQO4rV6G1jv1ZPq', desc:'🇳🇬 Kannywood' },
+  { id:'h2', title:'Hausa Film 2', type:'hausa', poster:'https://image.tmdb.org/t/p/w300/zEeC9v9ZGwYWpNGVwLzLZjZQBqM.jpg', url:'https://www.youtube.com/embed/videoseries?list=PLmQ1M6H7j0H7Z5G5bGMQO4rV6G1jv1ZPq', desc:'🇳🇬 Kannywood' },
+  { id:'s1', title:'Money Heist', type:'series', poster:'https://image.tmdb.org/t/p/w300/reEMJA1uzscCbkpeRJeTT2bjqUp.jpg', url:'https://www.youtube.com/embed/hMANIarjT50', desc:'Series • Netflix' },
+  { id:'s2', title:'Breaking Bad', type:'series', poster:'https://image.tmdb.org/t/p/w300/ggFHVNu6YYI5L9pCfOacjizRGt.jpg', url:'https://www.youtube.com/embed/HhesaQXLuRY', desc:'Series • Drama' },
 ];
 
 function openLiveTVPanel() {
   document.getElementById('liveTVPanel').classList.add('show');
-  if (typeof closeSidebar === 'function') closeSidebar();
+  closeSidebar();
   renderTVChannels();
 }
 function closeLiveTVPanel() {
   document.getElementById('liveTVPanel').classList.remove('show');
+  // Stop any playing video
   const grid = document.getElementById('tvGrid');
   if (grid) grid.innerHTML = '';
 }
