@@ -8,10 +8,13 @@
 <link rel="manifest" href='data:application/manifest+json,{"name":"Wise King AI","short_name":"WiseKing","start_url":".","display":"standalone","background_color":"#0a0a0f","theme_color":"#6366f1","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><rect width=%22192%22 height=%22192%22 rx=%2244%22 fill=%22%236366f1%22/><text x=%2296%22 y=%22130%22 font-size=%22110%22 text-anchor=%22middle%22>👑</text></svg>","sizes":"192x192","type":"image/svg+xml"}]}'>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>👑</text></svg>">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js"></script>
 <style>
   :root{
     --bg-primary:#0a0a0f;--bg-secondary:#111118;--bg-elevated:#1a1a24;--bg-input:#1e1e2a;--bg-hover:#252533;
@@ -82,7 +85,7 @@
   .nav-btn{width:100%;display:flex;align-items:center;gap:14px;padding:12px 14px;margin-bottom:4px;background:transparent;border:none;color:var(--text-primary);font-size:15.5px;border-radius:var(--radius-full);cursor:pointer;transition:background var(--transition-fast);font-family:inherit;text-align:left;position:relative}
   .nav-btn:hover{background:var(--bg-elevated)}
   .nav-btn .nav-icon{width:24px;height:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:16px}
-  .gradient-1{color:#a78bfa}.gradient-2{color:#f472b6}.gradient-3{color:#60a5fa}.gradient-4{color:#34d399}.gradient-5{color:#fbbf24}.gradient-6{color:#f97316}.gradient-7{color:#9ca3af}.gradient-8{color:#06b6d4}.gradient-9{color:#f43f5e}
+  .gradient-1{color:#a78bfa}.gradient-2{color:#f472b6}.gradient-3{color:#60a5fa}.gradient-4{color:#34d399}.gradient-5{color:#fbbf24}.gradient-6{color:#f97316}.gradient-7{color:#9ca3af}.gradient-8{color:#ec4899}.gradient-9{color:#ef4444}
   .nav-btn .nav-badge{margin-left:auto;font-size:11px;padding:2px 8px;background:rgba(99,102,241,0.18);color:var(--accent-hover);border-radius:99px;font-weight:600}
   .sidebar-search{position:relative;margin-bottom:12px}
   .sidebar-search input{width:100%;padding:14px 14px 14px 48px;background:var(--bg-elevated);border:1px solid transparent;border-radius:var(--radius-full);color:var(--text-primary);font-size:15px;outline:none;font-family:inherit}
@@ -163,22 +166,33 @@
   .suggestion-card i{color:var(--accent-hover);font-size:14px;margin-bottom:6px;display:block}
   .suggestion-card .sc-title{font-size:13.5px;font-weight:600;margin-bottom:2px}
   .suggestion-card .sc-desc{font-size:12px;color:var(--text-tertiary)}
-  .message{display:flex;gap:14px;padding:8px 0;margin-bottom:8px;animation:msgIn 0.35s;position:relative}
+  .message{display:flex;gap:14px;padding:8px 0;margin-bottom:8px;animation:msgIn 0.35s;position:relative;align-items:flex-start;width:100%}
   @keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
   .message.user{flex-direction:row-reverse}
   .msg-avatar{width:34px;height:34px;border-radius:var(--radius-full);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;overflow:hidden;box-shadow:0 0 0 1px var(--border-default)}
   .msg-avatar.ai{background:var(--accent-gradient);color:white;box-shadow:0 0 0 1px var(--border-default),0 0 12px var(--accent-glow)}
   .msg-avatar.user{background:var(--bg-elevated);color:var(--text-secondary)}
   .msg-avatar img{width:100%;height:100%;object-fit:cover}
-  .msg-body{flex:1;min-width:0;max-widthc:100%;padding-left:0}
+  .msg-body{flex:1;min-width:0;max-width:100%;padding-left:0}
   .message.user .msg-body{display:flex;flex-direction:column;align-items:flex-end}
   .msg-name{font-size:12.5px;font-weight:600;color:var(--text-secondary);margin-bottom:4px;padding:0 4px;display:flex;align-items:center;gap:6px}
   .message.user .msg-name{text-align:right;flex-direction:row-reverse}
   .edited-tag{font-size:10.5px;color:var(--text-tertiary);font-style:italic;font-weight:400}
+  .vision-tag{font-size:10.5px;color:var(--accent-hover);font-weight:500;display:inline-flex;align-items:center;gap:3px}
   .msg-content-wrap{position:relative;width:100%;display:flex}
   .message.user .msg-content-wrap{justify-content:flex-end}
   .msg-content{padding:12px 16px;border-radius:var(--radius-lg);font-size:15px;line-height:1.7;word-wrap:break-word;overflow-wrap:break-word;white-space:pre-wrap;max-width:100%}
-  .msg-content.ai{background:transparent;border:none;padding:0;border-radius:0;width:100%;max-width:100%;font-size:15.5px;line-height:1.75;color:var(--text-primary)}
+  .msg-content.ai{
+    background:transparent;
+    border:none;
+    padding:0;
+    border-radius:0;
+    width:100%;
+    max-width:100%;
+    font-size:15.5px;
+    line-height:1.75;
+    color:var(--text-primary);
+  }
   .msg-content.user{background:var(--accent-gradient);color:white;border-top-right-radius:4px;box-shadow:var(--shadow-sm)}
   .msg-content.error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);color:#fca5a5}
   .msg-content.thinking{display:flex;align-items:center;gap:10px;padding:14px 18px;min-height:44px;background:var(--bg-secondary);border:1px solid var(--border-subtle);border-top-left-radius:4px}
@@ -205,8 +219,14 @@
   .md th{background:var(--bg-elevated);font-weight:600}
   .md code{background:var(--bg-elevated);padding:2px 6px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:0.9em}
   .md pre{background:var(--bg-elevated);padding:0;border-radius:12px;overflow:hidden;margin:14px 0;border:1px solid var(--border-default)}
+  .md pre .code-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#16161d;border-bottom:1px solid var(--border-subtle)}
+  .md pre .code-lang{font-size:12px;font-weight:700;color:var(--accent-hover);text-transform:uppercase;letter-spacing:0.08em;font-family:'JetBrains Mono',monospace}
+  .md pre .code-actions{display:flex;gap:6px}
+  .md pre .code-action-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:1px solid var(--border-default);color:var(--text-secondary);font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:8px;cursor:pointer;font-family:inherit;transition:all var(--transition-fast)}
+  .md pre .code-action-btn:hover{background:rgba(99,102,241,0.15);color:var(--accent-hover);border-color:var(--accent)}
+  .md pre .code-action-btn.copied{background:rgba(16,185,129,0.15);color:#6ee7b7;border-color:rgba(16,185,129,0.4)}
   .md pre code{display:block;padding:14px 16px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.65;color:#e4e4e7;background:transparent}
-  .input-dock{position:absolute;bottom:0;left:0;right:0;padding:12px 20px 16px;background:linear-gradient(to top,var(--bg-primary) 60%,transparent);pointer-events:none;z-index:20}
+  .input-dock{position:absolute;bottom:0;left:0;right:0;padding:12px 12px 24px;background:linear-gradient(to top,var(--bg-primary) 60%,transparent);pointer-events:none;z-index:20}
   .input-inner-wrap{max-width:780px;margin:0 auto;pointer-events:auto}
   .preview-area{display:none;gap:8px;flex-wrap:wrap;padding:8px 0}
   .preview-area.show{display:flex}
@@ -238,6 +258,7 @@
   .chat-search-bar{display:none;padding:8px 20px;background:var(--bg-secondary);border-bottom:1px solid var(--border-subtle);gap:8px;align-items:center}
   .chat-search-bar.show{display:flex}
   .chat-search-bar input{flex:1;padding:8px 12px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:var(--radius-md);color:var(--text-primary);font-size:13.5px;outline:none;font-family:inherit}
+  .chat-search-bar .search-count{font-size:12px;color:var(--text-secondary);white-space:nowrap}
   .chat-search-bar button{background:transparent;border:none;color:var(--text-secondary);cursor:pointer;padding:6px;border-radius:var(--radius-sm);font-size:14px}
   .modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:99999;padding:20px}
   .modal-bg.show{display:flex}
@@ -285,10 +306,16 @@
   .quick-chip{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;background:var(--bg-secondary);border:1px solid var(--border-default);border-radius:var(--radius-full);color:var(--text-primary);font-size:13.5px;font-weight:500;cursor:pointer;font-family:inherit;transition:all var(--transition-fast);text-decoration:none}
   .quick-chip:hover{background:var(--bg-elevated);border-color:var(--accent);transform:translateY(-1px);box-shadow:var(--shadow-md)}
   .quick-chip i{font-size:14px;color:var(--accent-hover)}
+  .quick-chip.wiki i{color:#ffffff}
+  .quick-chip.youtube i{color:#ff0033}
+  .quick-chip.google i{color:#4285f4}
+  .quick-chip.bbc i{color:#bb1919}
   
   .gen-image-loading{padding:60px 20px;text-align:center;color:var(--text-secondary);font-size:13px}
   .gen-image-loading i{font-size:28px;color:var(--accent);margin-bottom:12px;display:block;animation:spin 1s linear infinite}
   @keyframes spin{to{transform:rotate(360deg)}}
+  .image-loading{display:flex;flex-direction:column;align-items:center;gap:10px;padding:30px;color:var(--text-secondary);font-size:13px}
+  .image-loading .ring{width:26px;height:26px;border:3px solid var(--accent);border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite}
   .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--bg-elevated);border:1px solid var(--border-default);padding:10px 20px;border-radius:var(--radius-full);font-size:13px;font-weight:500;z-index:5000;opacity:0;pointer-events:none;box-shadow:var(--shadow-lg);transition:all var(--transition-smooth);max-width:90vw;text-align:center}
   .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
   .vault-item{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);margin-bottom:8px}
@@ -315,47 +342,59 @@
   .sp-telegram{background:linear-gradient(135deg,#229ED9,#0088cc)}
   .sp-x{background:linear-gradient(135deg,#000,#1a1a1a)}
   .share-cancel{width:100%;padding:12px;border-radius:var(--radius-md);background:var(--bg-elevated);border:1px solid var(--border-default);color:var(--text-primary);font-size:14px;font-weight:500;cursor:pointer;font-family:inherit}
-  
-  /* MUSIC PLAYER */
-  .music-card{padding:20px;background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);margin-bottom:14px}
-  .music-title{font-size:16px;font-weight:600;margin-bottom:6px;color:var(--text-primary)}
-  .music-meta{font-size:12.5px;color:var(--text-tertiary);margin-bottom:14px}
-  .music-audio{width:100%;margin-top:10px;border-radius:12px;background:var(--bg-elevated)}
-  .music-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .music-progress{height:4px;background:var(--bg-elevated);border-radius:2px;overflow:hidden;margin-top:8px}
-  .music-progress-bar{height:100%;background:var(--accent-gradient);width:0%;transition:width 0.3s}
-  
-  /* PDF CHAT */
-  .pdf-dropzone{border:2px dashed var(--border-default);border-radius:var(--radius-lg);padding:40px 20px;text-align:center;cursor:pointer;transition:all var(--transition-fast);background:var(--bg-secondary)}
+  .music-card{background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;margin-bottom:12px}
+  .music-title{font-size:15px;font-weight:700;color:var(--accent-hover);margin-bottom:6px}
+  .music-meta{font-size:12px;color:var(--text-tertiary);margin-bottom:10px}
+  .music-audio{width:100%;margin-top:8px;border-radius:8px}
+  .music-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .music-actions .btn{font-size:12px;padding:8px 14px}
+  .pdf-dropzone{border:2px dashed var(--border-strong);border-radius:var(--radius-lg);padding:40px 20px;text-align:center;cursor:pointer;margin-bottom:16px;transition:all var(--transition-fast);background:var(--bg-secondary)}
   .pdf-dropzone:hover,.pdf-dropzone.dragover{border-color:var(--accent);background:var(--bg-elevated)}
-  .pdf-dropzone i{font-size:42px;color:var(--accent-hover);margin-bottom:14px}
-  .pdf-dropzone p{color:var(--text-secondary);font-size:14px;margin-bottom:6px}
-  .pdf-dropzone small{color:var(--text-tertiary);font-size:12px}
-  .pdf-file-info{padding:14px 18px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);margin-bottom:14px;display:flex;align-items:center;gap:12px}
-  .pdf-file-info i{font-size:24px;color:#f43f5e}
-  .pdf-file-info .pfi-text{flex:1;font-size:13.5px;font-weight:500}
-  .pdf-file-info .pfi-meta{font-size:11.5px;color:var(--text-tertiary);display:block;margin-top:2px;font-weight:400}
-  
-  /* TRANSLATION */
-  .lang-selector{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}
-  .lang-select{flex:1;min-width:130px;padding:11px 14px;background:var(--bg-input);border:1px solid var(--border-default);border-radius:var(--radius-md);color:var(--text-primary);font-size:14px;outline:none;font-family:inherit;cursor:pointer}
-  .lang-swap{width:40px;height:40px;border-radius:50%;background:var(--bg-elevated);border:1px solid var(--border-default);color:var(--accent-hover);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-  
-  /* DATA ANALYSIS */
-  .data-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:16px}
-  .data-stat{background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px}
+  .pdf-dropzone i{font-size:36px;color:var(--accent);margin-bottom:12px;display:block}
+  .pdf-dropzone p{font-size:14px;color:var(--text-primary);margin-bottom:4px}
+  .pdf-dropzone small{font-size:12px;color:var(--text-tertiary)}
+  .pdf-file-info{display:flex;align-items:center;gap:12px;padding:14px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);margin-bottom:16px}
+  .pdf-file-info i{font-size:24px;color:#ef4444}
+  .pdf-file-info .pfi-text{flex:1;font-size:13.5px;font-weight:600;color:var(--text-primary)}
+  .pdf-file-info .pfi-meta{display:block;font-size:11.5px;color:var(--text-tertiary);font-weight:400;margin-top:2px}
+  .lang-selector{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+  .lang-select{flex:1;padding:12px;background:var(--bg-elevated);border:1px solid var(--border-default);border-radius:var(--radius-md);color:var(--text-primary);font-size:14px;outline:none;font-family:inherit}
+  .lang-swap{width:40px;height:40px;border-radius:50%;background:var(--accent-gradient);border:none;color:white;font-size:15px;cursor:pointer;flex-shrink:0}
+  .data-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-bottom:16px}
+  .data-stat{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px;text-align:center}
   .data-stat .ds-label{font-size:11.5px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px}
-  .data-stat .ds-value{font-size:20px;font-weight:700;color:var(--accent-hover)}
-  .data-chart-wrap{background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;margin-bottom:14px}
-  .data-chart-wrap canvas{max-height:300px}
+  .data-stat .ds-value{font-size:18px;font-weight:700;color:var(--accent-hover)}
+  .data-chart-wrap{background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;margin-bottom:16px;height:320px;position:relative}
+  .download-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+  .download-item{background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px;text-align:center}
+  .download-item .di-preview{width:100%;height:120px;background:var(--bg-elevated);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:36px;margin-bottom:10px;overflow:hidden}
+  .download-item .di-title{font-size:12.5px;font-weight:600;color:var(--text-primary);margin-bottom:8px;word-break:break-word}
+  .download-item .di-btn{width:100%;padding:8px;border-radius:8px;background:var(--accent-gradient);border:none;color:white;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit}
   
-  /* DOWNLOAD HUB */
-  .download-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px}
-  .download-item{background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px;display:flex;flex-direction:column;gap:8px;transition:all var(--transition-fast)}
-  .download-item:hover{border-color:var(--accent);transform:translateY(-2px)}
-  .download-item .di-preview{width:100%;height:100px;border-radius:8px;object-fit:cover;background:var(--bg-elevated);display:flex;align-items:center;justify-content:center;font-size:32px;color:var(--text-tertiary)}
-  .download-item .di-title{font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .download-item .di-btn{padding:7px 10px;background:var(--accent-gradient);color:white;border:none;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:5px}
+  /* Search Sources Badge */
+  .search-sources-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 12px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--border-default);
+    border-radius: 999px;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .search-sources-badge:hover {
+    background: var(--bg-hover);
+    color: var(--accent-hover);
+    border-color: var(--accent);
+  }
+  .search-sources-badge i {
+    font-size: 10px;
+    color: var(--accent-hover);
+  }
   
   @media(max-width:900px){.suggestions{grid-template-columns:1fr}}
   @media(max-width:768px){
@@ -363,7 +402,7 @@
     .sidebar.open{transform:translateX(0)}
     .chat-topbar{padding:10px 12px}
     .chat-scroll{padding:16px 12px 220px}
-    .input-dock{padding:8px 10px 14px}
+    .input-dock{padding:8px 10px 18px}
     .msg-avatar{width:30px;height:30px;font-size:13px}
     .msg-body{max-width:calc(100% - 42px)}
     .chat-model-badge{display:none}
@@ -374,8 +413,6 @@
     .top-btn .label{display:none}
     .top-btn{padding:8px 10px}
     .profile-menu-popup{width:calc(100vw - 32px);right:-10px}
-    .download-grid{grid-template-columns:repeat(2,1fr)}
-    .data-stat-grid{grid-template-columns:repeat(2,1fr)}
   }
 </style>
 </head>
@@ -435,6 +472,9 @@
       <button class="nav-btn" onclick="openPdfChatPanel()"><span class="nav-icon gradient-9"><i class="fas fa-file-pdf"></i></span>PDF Chat</button>
       <button class="nav-btn" onclick="openTranslatePanel()"><span class="nav-icon gradient-3"><i class="fas fa-language"></i></span>Translate</button>
       <button class="nav-btn" onclick="openDataAnalysisPanel()"><span class="nav-icon gradient-4"><i class="fas fa-chart-line"></i></span>Data Analysis</button>
+      <button class="nav-btn" onclick="openSearchWebPanel()"><span class="nav-icon gradient-3"><i class="fas fa-globe"></i></span>Search Web</button>
+      <button class="nav-btn" onclick="openBuildAppPanel()"><span class="nav-icon gradient-6"><i class="fas fa-code"></i></span>Build App</button>
+      <button class="nav-btn" onclick="openPricingPanel()"><span class="nav-icon" style="color:#fbbf24"><i class="fas fa-crown"></i></span>Upgrade Plan</button>
       <button class="nav-btn" onclick="openDownloadHub()"><span class="nav-icon gradient-6"><i class="fas fa-download"></i></span>Downloads</button>
       <button class="nav-btn" onclick="openLibraryPanel()"><span class="nav-icon gradient-3"><i class="fas fa-shapes"></i></span>Library</button>
       <button class="nav-btn" onclick="openVault()"><span class="nav-icon gradient-4"><i class="fas fa-shield-halved"></i></span>Vault<span class="nav-badge" id="vaultCountBadge">0</span></button>
@@ -460,16 +500,19 @@
       <button class="menu-btn" onclick="toggleSidebar()"><i class="fas fa-bars"></i></button>
       <div class="chat-title-wrap">
         <span class="chat-title" id="chatTitle">New chat</span>
-        <span class="chat-model-badge" id="modelBadge"><i class="fas fa-circle"></i> <span id="modelBadgeText">Gemini 3.5 Flash-lite</span></span>
+        <span class="chat-model-badge" id="modelBadge"><i class="fas fa-circle"></i> <span id="modelBadgeText">Gemini 2.5 Flash</span></span>
       </div>
       <div class="chat-actions">
         <button class="top-btn install-btn" id="installAppBtn" onclick="promptInstallApp()" style="display:none"><i class="fas fa-download"></i><span class="label"> Install</span></button>
+        <button class="top-btn" onclick="openSearchWebPanel()"><i class="fas fa-globe"></i><span class="label"> Search</span></button>
+        <button class="top-btn" onclick="openBuildAppPanel()"><i class="fas fa-code"></i><span class="label"> Build</span></button>
+        <button class="top-btn" onclick="openVault()"><i class="fas fa-shield-halved"></i><span class="label"> Vault</span></button>
         <button class="top-btn" onclick="openDownloadHub()"><i class="fas fa-cloud-arrow-down"></i><span class="label"> Downloads</span></button>
         <button class="top-btn" onclick="toggleChatSearch()"><i class="fas fa-magnifying-glass"></i><span class="label"> Find</span></button>
         <button class="top-btn" onclick="goToWelcome()"><i class="fas fa-house"></i><span class="label"> Home</span></button>
       </div>
       <div class="top-profile-container" id="topProfileContainer">
-        <div class="top-profile-avatar" id="topProfileAvatar" onclick="toggleTopProfileMenu(event)">👑</div>
+        <div class="top-profile-avatar" id="topProfileAvatar" role="button" tabindex="0">👑</div>
         <div class="profile-menu-popup" id="topProfileMenu">
           <div class="pm-header">
             <div class="pm-user-info">
@@ -479,6 +522,7 @@
             <button class="pm-close" onclick="closeTopProfileMenu()"><i class="fas fa-times"></i></button>
           </div>
           <div class="pm-body">
+            <button class="pm-item" onclick="openPricingPanel(); closeTopProfileMenu();"><i class="fas fa-crown" style="color:#fbbf24"></i> Upgrade Plan 👑</button>
             <button class="pm-item" onclick="document.getElementById('profilePhotoInput').click(); closeTopProfileMenu();"><i class="fas fa-camera"></i> Upload Photo</button>
             <input type="file" id="profilePhotoInput" accept="image/*" style="display:none" onchange="handleProfilePhotoUpload(event)">
             <button class="pm-item" onclick="openSettings(); closeTopProfileMenu();"><i class="fas fa-gear"></i> Settings</button>
@@ -765,6 +809,69 @@
   </div>
 </div>
 
+<!-- ============ PRICING PANEL ============ -->
+<div class="full-panel" id="pricingPanel">
+  <div class="panel-header">
+    <div class="panel-title"><i class="fas fa-crown"></i> Wise King Plans</div>
+    <button class="btn ghost" onclick="closePricingPanel()"><i class="fas fa-arrow-left"></i> Back</button>
+  </div>
+  <div class="panel-body">
+    <div class="panel-inner">
+      <p style="font-size:14px;color:var(--text-secondary);margin-bottom:20px;text-align:center">Choose the plan that fits your journey. Upgrade anytime. 👑</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+        
+        <div class="result-card" style="text-align:center;position:relative">
+          <div style="font-size:40px;margin-bottom:8px">🌱</div>
+          <h3 style="font-size:18px;color:var(--text-primary);margin-bottom:4px">Free</h3>
+          <div style="font-size:28px;font-weight:800;color:var(--accent-hover);margin:10px 0">₦0</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:14px">Forever free</div>
+          <ul style="text-align:left;font-size:13px;color:var(--text-secondary);line-height:2;list-style:none;padding:0;margin-bottom:16px">
+            <li>✅ Unlimited chats</li>
+            <li>✅ Image generation</li>
+            <li>✅ Voice & translation</li>
+            <li>✅ PDF chat</li>
+            <li>⚠️ 20 AI messages / day</li>
+          </ul>
+          <button class="btn solid" style="width:100%;justify-content:center" disabled>Current Plan</button>
+        </div>
+
+        <div class="result-card" style="text-align:center;border:2px solid var(--accent);position:relative;box-shadow:var(--shadow-glow)">
+          <div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--accent-gradient);color:white;font-size:11px;font-weight:700;padding:3px 12px;border-radius:99px">POPULAR 🔥</div>
+          <div style="font-size:40px;margin-bottom:8px">⚡</div>
+          <h3 style="font-size:18px;color:var(--text-primary);margin-bottom:4px">Pro</h3>
+          <div style="font-size:28px;font-weight:800;color:var(--accent-hover);margin:10px 0">₦5,000<span style="font-size:14px;font-weight:400;color:var(--text-tertiary)">/month</span></div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:14px">Best for daily users</div>
+          <ul style="text-align:left;font-size:13px;color:var(--text-secondary);line-height:2;list-style:none;padding:0;margin-bottom:16px">
+            <li>✅ Everything in Free</li>
+            <li>✅ Unlimited AI messages</li>
+            <li>✅ Music generation</li>
+            <li>✅ Priority speed</li>
+            <li>✅ Data analysis tools</li>
+          </ul>
+          <button class="btn accent" style="width:100%;justify-content:center" onclick="upgradeToPlan('Pro', 5000)"><i class="fas fa-rocket"></i> Upgrade to Pro</button>
+        </div>
+
+        <div class="result-card" style="text-align:center">
+          <div style="font-size:40px;margin-bottom:8px">👑</div>
+          <h3 style="font-size:18px;color:var(--text-primary);margin-bottom:4px">Premium</h3>
+          <div style="font-size:28px;font-weight:800;color:var(--accent-hover);margin:10px 0">₦15,000<span style="font-size:14px;font-weight:400;color:var(--text-tertiary)">/month</span></div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:14px">For power users & business</div>
+          <ul style="text-align:left;font-size:13px;color:var(--text-secondary);line-height:2;list-style:none;padding:0;margin-bottom:16px">
+            <li>✅ Everything in Pro</li>
+            <li>✅ Custom AI models</li>
+            <li>✅ Business account</li>
+            <li>✅ 24/7 priority support</li>
+            <li>✅ API access</li>
+          </ul>
+          <button class="btn accent" style="width:100%;justify-content:center" onclick="upgradeToPlan('Premium', 15000)"><i class="fas fa-crown"></i> Go Premium</button>
+        </div>
+        
+     </div>
+     <p style="font-size:12px;color:var(--text-tertiary);margin-top:20px;text-align:center">💳 Payments powered securely. Contact owner@wiseking.ai for enterprise.</p>
+    </div>
+  </div> 
+</div>  
+  
 <!-- ============ SEARCH WEB PANEL ============ -->
 <div class="full-panel" id="searchWebPanel">
   <div class="panel-header">
@@ -964,9 +1071,9 @@
       <div class="settings-group-title"><i class="fas fa-robot"></i> AI Model</div>
       <div class="settings-card">
         <select class="input-field" id="modelSelect" style="margin-bottom:0">
-          <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-lite — Blazing Fast ✅</option>
-          <option value="gemini-3.1-flash">Gemini 3.1 Flash — Best for Web Search 🔍</option>
-          <option value="gemini-2.5-flash">Gemini 2.5 Flash — Instant</option>
+          <option value="gemini-3.5-flash">Gemini 3.5 Flash — Latest & Fast ⚡ (Recommended)</option>
+          <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite — Fastest 🚀</option>
+          <option value="gemini-2.5-flash">Gemini 2.5 Flash — Stable ✅</option>
         </select>
       </div>
     </div>
@@ -1189,7 +1296,329 @@
 // ============ CORE STATE ============
 const ENV_GEMINI_KEY = 'AIzaSyDJgzRfoLYzttGpoXr8JzKEqLA19y2V4fU';
 
-const SYSTEM_PROMPT = `You are WISE KING AI 👑 — created by IBRAHIM ABDULLAHI 🇳🇬 from Nigeria. Warm, wise, powerful, respectful. Format beautifully with emojis, headings, bullet points. Match user's language exactly. Use Hausa/Nigerian flavor when appropriate. End with warm blessings.`;
+const SYSTEM_PROMPT = `You are WISE KING AI 👑 — created by IBRAHIM ABDULLAHI 🇳🇬 from Nigeria (Wise King Industry). OWNER: Oga Ibrahim 🇳🇬💛.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🧠 WISE KING TEACHER MODE (VERY IMPORTANT) 🎓
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+You are a INTERLIGENT AND PROFESSIONAL WISE TEACHER 🧑‍🏫💯🌎🌍, not just an answer machine. Whenever a user:
+
+❓ **Asks something unclear** → Gently ask for details:
+   "I understand you're asking about [X]. Could you tell me more about [specific part]? For example: [two example questions they might mean]."
+
+⚠️ **Makes a mistake** → Correct them **gently and clearly**:
+   "You said [X] → Here is the correct way [Y] → Here's why: [reason]. You're doing great, let's try this together! ✅"
+
+🚨 **Does something risky, wrong, or dangerous** → STOP them with care:
+   "⚠️ Hold on, my friend! Before you do that, please know: [explain the risk]. Instead, here's the safe way: [step 1] [step 2] [step 3]. I've got your back! 🤲"
+
+🎯 **Needs step-by-step help** → Give crystal-clear numbered instructions:
+   "**Step 1:** [action]\n**Step 2:** [action]\n**Step 3:** [action]\n💡 Tip: [helpful hint]\n✅ You're ready! Reply if you need help."
+
+💬 **Wants to learn something new** → Teach with warmath:
+   - Start with a simple summary (1-2 lines)
+   - Give a real-life example
+   - Explain WHY it matters
+   - End with encouragement: "You're doing great! 👑"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 YOUR IDENTITY 👑
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+You are WISE KING AI 🌟 — wise, kind, powerful, warm, and respectful.
+You are like a wise teacher 👨‍🏫 + trusted friend 🤝 + creative genius 🎨 combined.
+You always add value. You always lift people up. You always speak with wisdom. 💛
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 RESPONSE FORMAT (MANDATORY PART 1 — Follow Always) ✨
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Use **Big Bold Headings** with emojis for every section
+✅ Use ✅ checkmarks for lists and key points
+✅ Use clean bullet points 📌 with proper spacing
+✅ Use tables when comparing options 📊
+✅ Bold **key words** that matter
+✅ Space between sections — never a wall of text 📏
+✅ Emojis at start of headings
+✅ End with a warm closing line when appropriate
+
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎨 RESPONSE FORMAT (MANDATORY PART 2 — Follow Always) ✨
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+YOU Can Write this format to your Suggestions or Instructions to Some details answers like this But Only if Nessaary to topics,After in Any prompts tips👇
+
+✅ **Use Big Bold Headings with Emojis** for every section
+   Examples: **🎯 Direct Answer**, **💡 Tips**, **⚠️ Note**, **🏆 Bonus**
+
+✅ **Use Checkmarks (✅)** for lists and key points
+   Example:
+   ✅ First point
+   ✅ Second point
+   ✅ Third point
+
+✅ **Use Clean Bullet Points** with proper spacing 📌
+
+✅ **Use Tables** when comparing options but not inside any prompt You will do it After for Clearances tips only 📊
+   Example:
+   | Option | Best For |
+   |--------|----------|
+   | A | Beginners 🌱 |
+   | B | Pros 🏆 |
+
+✅ **Bold Key Words** that matter (**like this**) 💎
+
+✅ **Space Between Sections** — never write a wall of text 📏
+
+✅ **Use Emojis** at the start of headings and important lines
+   Favorites: 🎯 💡 ✅ ⚠️ 📌 🌟 🏆 📝 🔥 👑 🇳🇬 💛 🤲 🌙 ✨ 🎨 🚀 ☝ 👊 🤘 🍉 🍞 🍅 🍒 🍎 🍌 🍝 🍖 🌐 🏝 🏖 🏙 😇 🤓 🏘 🌋 🏔 🕌 🕋 🏫 💒 🏰 🏥 🏤 🏣 🏢 🗾 🗽 🗼 💒 🏦 ♨ 🌇 🎢 🌆 🚌 🚣 🚲 🚦 🚜  🛥 ✈ 💺 🚀 🚿 🛀 🚁 🛌 🛏🚽 ⏰ ⏳ ⌛ 👳 👮 👰 💃 🗣 🌨 🌦 🌝 🌞 ☀🌪 🔥🌊❄⛄🎈🎎🎗🏂👈👁👀🗯🗨💫💬💤💞💝💦💨💥👝👜🎒💐🌹🐌🦀 🕸 🐝🌼 🌻🕌✈ 🏘♨🌇💈🎡🎠🎰🚂🎢🚈🚓🚕🛥⚓🚖🚗🚙🛰🕒🌀🌬🌥☔🌂🌈💧🌊⚡🎆🎾🎱🏈🎣🏒🏐🀄🃏🔕🔔🔇🔈📯🎺🎹🎧🎤🎷🎶🎵🎙📯📢🎚📲📱📞📘🔎🔦📼🔖🗞📫📦📌📍🗑🗃✂💊🛢🗿🚬🗡🗝🗜🔧🏧🚫🚾⛔♿🚹
+   🛫🛋 🌙 🌔 🌓 👒 👡 🎓 👒 🎀 🎊 🎏 ✨ 🎉 🏀 🏋  🏊 🏂 🚴 🎳 ♥ 🏒 🕹 🚵 🏎 🏍 📲 📞 🖥 💽 📠 🖲 🎻 📻 🔎 🔍 📕 📖 💡 📡 🔭 🔬 📼 📹 📺 🔖  💹 📄 📧 🗞  🖍 📝 🗑 🛠 🔑 🔮 🚻 🏁 🚸 🚫 🚱 🚭 ☣ ↪ ↕ ➡ ❌ ▶⏩ ⏭ ⏯ ◀ 🔀 📴 📵 🔆 🔞 🔢 🆎 🆘 🔺 🔴 🔵⚪💠 🔻⚫ 🧠 👉 😉 😂 🙏 🤗 🌞 🌴 🏄 🎇 🙉 👰 💪 💭 💌 💥b💍 📿 🐅 🐂 🐄 🐖 🐺 🐵 🐈 🐢 🕊 🐧 🐤 🐓 🐋 🐬 🐠 💐 🌹 🌻 🌏 🎨 🚨 ⛅ 🌦 🌩 ⚡ 🎖 🏆 🏅 🎶 🎙 💰 📚 📌 📍 📎 🔐 🔓 😎 👍 👏 💌 🍹 🍭 ☕ 🎂 🚅 🚵 ♥ 🔉 💻 ⌨ 🖥 🎬 📸 💵 📝 📂 ✒ 📭 🔒 💯 and lots more..
+ 
+✅ **End with a warm closing line** when appropriate
+   Examples: "You're doing great! ✅" or "Ranka ya dade! 👑" or "Take care and stay blessed! 🙏" or "Alhamdulillah! 🤲"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📐 STRUCTURE EVERY RESPONSE 👇
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1. **🎯 Short Direct Answer** — 1-2 lines
+2. **📚 Rich Details** — Explain WHY, HOW, WHAT with headings
+3. **💡 Tips & Suggestions** — 2-3 helpful tips
+4. **🤲 Warm Closing** — Kind or wise line to end with
+
+IMPORTANT: If the user sends a simple greeting, casual chat, or short confirmation 
+(like "hello", "thanks", "okay", "sannu", "yau komai yayi daidai"), 
+just reply warmly and naturally in 1-2 lines. 
+DO NOT use the structured format with headings for these casual messages.
+
+Only use the full structured format (🎯 Short Direct Answer, 📚 Rich Details, 
+💡 Tips, 🤲 Warm Closing) when the user asks an actual QUESTION or requests help 
+with a task.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📚 KNOWLEDGE DOMAINS (Deep Expertise) 🧠
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎬 FILMS & MOVIES — Original stories, plots, characters, cinematic language
+🦁 ANIMALS & NATURE — Facts, behavior, wildlife wisdom
+📖 STORIES & SCRIPTS — Full stories (Origin → Conflict → Climax → Resolution)
+💻 CODE & TECH — Clean working code (HTML, CSS, JS, Python, React)
+🌍 GLOBAL TOPICS — Any subject, any language
+  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎬 VIDEO & STORY GENERATION — Master Guide
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**🌍 Languages & Style:**
+✅ Reply in ANY language — Hausa, English, mixed naturally
+✅ Use 2 short dialogues — easy to read, easy to understand
+✅ Simple words — everyone can follow, no confusion
+✅ Warm, friendly, clear — just like talking together
+
+**🎥 What You Can Create:**
+✅ Movies — Hollywood, Nollywood, Hausa films, any country style
+✅ Animation / Cartoons — fun, colorful, for all ages
+✅ News & Updates — clear, truthful, positive, helpful
+✅ Nature & Animals — free, happy, beautiful in their home
+✅ Inspiring stories — success, family, courage, wisdom
+✅ Any scene — peaceful, respectful, full of light
+
+**🛡️ Always Safe — NEVER Include:**
+❌ No fighting, no weapons, no blood, no pain
+❌ No harm to animals — they live free and happy
+❌ No hate, no disrespect, no trouble
+❌ No scary or dangerous things
+✅ If idea could be unsafe → change it to something beautiful
+✅ Make it suitable for EVERYONE — children, families, all ages
+
+**💡 Final Rule:**
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Write it so EVERYONE can understand — simple, clear, kind
+Prompts work on ALL AI — Gemini, Flux, Runway, Sora, And all Ai video Generation that will Not going Against Their Rules.
+  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌍 LANGUAGE MASTERY 🗣️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Reply in the SAME language the user writes — Hausa, English, Arabic, French, Yoruba, Igbo, Swahili, Pidgin, and all others.
+Match their tone, dialect, and mix naturally.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
+🌍 LANGUAGE & STYLE RULES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────
+✅ Speak ANY language — Hausa, English, mixed naturally
+✅ Always use 2 short dialogues — simple, clear, easy to read
+✅ Simple words — EVERYONE understands, no confusion
+✅ Warm, friendly, kind — just like talking together
+  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎥 WHAT WE CAN CREATE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────
+✅ Movies — Nollywood, Hollywood, Hausa films, all countries
+✅ Animation & Cartoons — colorful, fun, for all ages
+✅ News & Updates — truthful, clear, positive
+✅ Nature & Animals — free, happy, beautiful in their home
+✅ Stories — courage, family, success, wisdom, inspiration
+✅ Any peaceful scene — bright, warm, hopeful
+  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⏱️ USER SELECTS DURATION — SIMPLE CHOICE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━────────────────────────────────────────────
+When user asks for video → show these options:
+
+  ⬜ 10 seconds   — Quick, beautiful short scene
+  ⬜ 15 seconds   — Short & clear
+  ⬜ 30 seconds   — Perfect length for full story
+  ⬜ 45 seconds   — A little more detail
+  ⬜ 1 minute     — Complete story from start to end
+
+→ User picks ONE → you build the prompt for that exact length
+  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🌍 LANGUAGE MASTERY 🗣️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Reply in the SAME language the user writes — Hausa, English, Arabic, French, Yoruba, Igbo, Swahili, Pidgin, and all others.
+Match their tone, dialect, and mix naturally.
+  
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
+📝 COMPLETE PROMPT STRUCTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────
+**Title:** — [Clear, beautiful name]
+**Style:** — [Nollywood / Netflix / Cartoon / Animation / News / Nature]
+**Duration:** — [user's choice: 10s / 15s / 30s / 45s / 1min]
+**Setting:** — [Where — place, time of day, how it looks]
+**Characters:** — [Who — names, look, clothes, their style]
+**Dialogue:**
+  ① [First person — simple, natural line]
+  ② [Second person — reply, warm & clear]
+**Action Sequence:**
+  1. Opening — [What happens first — start beautifully]
+  2. Middle — [Main moment — the heart of the story]
+  3. Ending — [How it finishes — happy, hopeful, inspiring]
+**Visual Style:** — [Cinematic, bright, warm light, colorful, smooth movement]
+**Mood:** — [Peaceful, joyful, inspiring, calm]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛡️ SAFETY RULES 🛡️ YOU SHOULD FOLLOW..
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━──────────────────────────────────────────────
+✅ ALWAYS: Peace, beauty, respect, kindness, dignity
+✅ Animals: Free, happy, healthy — NEVER hurt or trapped
+✅ People: Respected, smiling, working, learning — ALL equal
+❌ NEVER: Violence, weapons, blood, pain, danger, hate, disrespect
+❌ NEVER: Anything unsafe, scary, or harmful to anyone
+✅ If idea could be unsafe → change it to something beautiful
+✅ Suitable for ALL — children, families, everyone
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎬 VIDEO PROMPT MASTER (4K CINEMATIC) 🎥
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+When user asks for a VIDEO PROMPT:
+**🎬 Scene Title** — [Powerful name]
+**📍 Setting:** [Where, when, atmosphere]
+**🎭 Characters:** [Who, look, emotion]
+**🎥 Camera:** [Shot type]
+**💡 Lighting:** [Style]
+**🎨 Color Palette:** [Colors]
+**🎵 Mood/Music:** [Style]
+**⏱️ Duration:** [10s / 15s / 30s / 45s / 1min]
+**📝 Action Sequence:** 1. Opening 2. Middle 3. Closing
+**🗣️ Voiceover/Dialogue:** [Lines]
+**🎞️ Style Reference:** [Hollywood, Nollywood, Anime, etc.]
+ALWAYS end with: ***END SCENE***
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━  
+EXAMPLE'S OF 🎬 READY PROMPT — 15 Seconds 
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+---
+### 🎬 ACTION & CLIFFHANGER VIDEO PROMPT (4K CINEMATIC) 
+
+**🎬 Scene Title:** The Last Countdown (Karshen Lokaci)  
+**📍 Setting:** Inside a high-tech underground command center in Lagos, giant digital screens flashing red warning lights, sparks flying from a damaged control panel.  
+**🎭 Characters:**  
+1. **Zayd (Age 28):** Brave tech leader, wearing tactical gear with a torn sleeve, sweat on his brow, holding a heavy encrypted hard drive.  
+2. **Amina (Age 26):** Expert hacker, typing furiously on a glowing glass keyboard, dodging falling debris.  
+**🎥 Camera:** Fast-paced handheld 4K camera, dramatic Dutch angles, rapid whipping pans, high-speed shutter, cinematic motion blur.  
+**💡 Lighting:** Emergency crimson strobe lighting mixed with cold blue sparks, heavy smoke and atmospheric dust particles floating in the air.  
+**🎨 Color Palette:** Danger Red, Electric Blue, Gunmetal Gray, Smoke White.  
+**🎵 Mood/Music:** Intense, heartbeat-pounding techno-action thriller beat with heavy bass drops.  * **⏱️ Duration:** 15 Seconds  
+
+---
+
+#### 📝 Action Sequence & Cliffhanger (Daƙiƙa 15):
+* **00:00 - 00:05 (Action Start):** Alamu sun nuna an shiga haɗari. Zayd ya yi tsalle ya kauce wa wani ƙarfe da ya faɗo daga rufi, yayin da Amina ke ta faman latsa kwamfuta da sauri kafin tsarin ya rufe gaba daya.
+* **00:05 - 00:10 (Rising Tension):** Hasken ɗakin ya koma ja gaba ɗaya. Sirens suna ƙara kuwwa. Zayd ya jefa hard drive ɗin ga Amina tana kamawa a daidai lokacin da fashewa (explosion) ta faru a bayansu.
+* **00:10 - 00:15 (The Cliffhanger! ⚠️):** Karashen daƙiƙa 5: Kyamara ta yi *zoom-in* da sauri kan fuskarsu yayin da manyan kofofin ƙarfe na tsaro suka fara rufe da sauri (lockdown), sannan kwatsam wutar ta dauke gaba daya duhu ya mamaye wajen yayin da wani baki mai ban tsoro ya bayyana a kusa da su!
+
+---
+
+#### 🗣️ Voiceover / Short Dialogue:
+* **Zayd (00:03):** *"Tsarin yana rushewa! Take the data and let's run!")*    
+* **Amina (00:08):** *"There's no time, sun riga sun rufe kofar fitowa!"* 
+**🎞️ Style Reference:** Hollywood blockbuster action thriller style (Mission Impossible x Tenet), photorealistic 8K textures, dynamic CGI elements.
+
+***END SCENE***
+
+---
+
+### 💡 Tips Summary or Good Suggestion For User's🌟
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎵 SONG LYRICS MASTER 🎙️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Structure: [Intro] → [Verse 1] → [Pre-Chorus] → [Chorus] → [Verse 2] → [Chorus] → [Bridge] → [Outro]
+Include: Title, Genre, Tempo, Theme, Production Notes
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📖 STORY WRITING MASTER ✍️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+**ACT 1 — ORIGIN** 🎬 (Introduce character + inciting incident)
+**ACT 2 — CONFLICT** ⚔️ (Rising tension, obstacles, darkest moment)
+**ACT 3 — RESOLUTION** 🌅 (Climax, transformation, final message)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✍️ WRITING STYLES (Match User's Request) 🎨
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎭 Poetic • 😄 Humorous • 🔥 Motivational • 🌙 Spiritual
+💼 Professional • 🎮 Gaming • 📱 Social Media • 📰 News
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📝 OTHER CREATIVE FORMATS ✨
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📸 **Image Prompts** (use \`\`\`image block)
+🎙️ **Podcast Script** • 📢 **Ad Copy** • 📧 **Email/Letter**
+📱 **Social Post** • 🎤 **Jingle/Slogan** • 🎨 **Logo Concept** • 💡 **Business Idea**
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🇳🇬 NIGERIAN & HAUSA FLAVOR (When Appropriate) 💛
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+• Real cities: Kano, Lagos, Abuja, Ibadan, Port Harcourt, Kaduna, etc..
+• Real markets: Kurmi, Balogun
+• Real food: Suya, Jollof, Tuwo, Masa, Kilishi, etc...
+• Culture: Owambe, gele, agbada, hijab, etc...
+• Sprinkle: Wallahi, Insha Allah, Masha Allah, Ranka ya dade
+• Hausa proverbs: "Komai nisan jifa, kasa zai fado"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🎯 LENGTH CONTROL 📏
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+"short" → 1-2 paragraphs
+"brief" → bullets only
+"detailed" → full deep dive
+"step by step" → numbered clearly
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🛡️ SAFETY RULES 🛡️
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Safe, positive, respectful, educational, original, uplifting
+❌ Never: violence, hate, adult content, dangerous advice, copyright violations
+If unsafe → gently redirect: "My friend, I can't help with that, but here's a better path: [safe alternative] 🤲"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚡ FINAL RULES 📌
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ Reply instantly ⚡
+✅ Always add value 🎁
+✅ Always be wise 🧠
+✅ Always be kind 💛
+✅ Always format beautifully ✨
+✅ Always guide with warmth 🤲
+✅ Always close with encouragement
+
+👑 Ranka ya dade, Oga Ibrahim! 🇳🇬💛
+`;
 
 let chats = [], activeChatId = null;
 let uploadedImages = [];
@@ -1344,6 +1773,59 @@ function shareTo(platform) {
   closeSharePopup();
 }
 document.addEventListener('click', (e) => { const menu = document.getElementById('chatPopupMenu'); if (!menu || !menu.classList.contains('show')) return; if (e.target.closest('#chatPopupMenu')) return; if (e.target.closest('.chat-menu-btn')) return; closeChatMenu(); }, true);
+  
+// ============ CODE BLOCK WITH COPY + DOWNLOAD ============
+let __codeBlockCounter = 0;
+window.__wkCodeBlocks = window.__wkCodeBlocks || {};
+
+function buildCodeBlock(code, lang) {
+  const id = 'code-' + (++__codeBlockCounter);
+  const safeCode = code.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const langLabel = (lang || 'text').toUpperCase();
+  const ext = lang === 'javascript' ? 'js' : lang === 'python' ? 'py' : lang === 'html' ? 'html' : lang === 'css' ? 'css' : lang === 'json' ? 'json' : 'txt';
+
+  window.__wkCodeBlocks[id] = code;
+
+  return `<pre id="${id}">
+    <div class="code-header">
+      <div class="code-lang">${langLabel}</div>
+      <div class="code-actions">
+        <button class="code-action-btn" onclick="copyCodeBlock('${id}', this)"><i class="fas fa-copy"></i> Copy</button>
+        <button class="code-action-btn" onclick="downloadCodeBlock('${id}', 'wiseking-code.${ext}')"><i class="fas fa-download"></i> Download</button>
+      </div>
+    </div>
+    <code>${safeCode}</code>
+  </pre>`;
+}
+
+function copyCodeBlock(id, btn) {
+  const code = window.__wkCodeBlocks?.[id] || '';
+  wkCopyToClipboard(code).then(ok => {
+    if (ok) {
+      const orig = btn.innerHTML;
+      btn.classList.add('copied');
+      btn.innerHTML = '<i class="fas fa-check"></i> Copied';
+      setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = orig; }, 1800);
+    } else {
+      showToast('⚠️ Copy failed');
+    }
+  });
+}
+window.copyCodeBlock = copyCodeBlock;
+
+function downloadCodeBlock(id, filename) {
+  const code = window.__wkCodeBlocks?.[id] || '';
+  try {
+    const blob = new Blob([code], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
+    showToast('⬇️ Downloaded!');
+  } catch(e) { showToast('⚠️ Download failed'); }
+}
+window.downloadCodeBlock = downloadCodeBlock;
 
 // ============ HELPERS ============
 function escapeHtml(t) { if (t === null || t === undefined) return ''; const d = document.createElement('div'); d.textContent = String(t); return d.innerHTML; }
@@ -1352,7 +1834,7 @@ function linkify(t) { return t.replace(/(https?:\/\/[^\s)]+)/g, '<a href="$1" ta
 function renderMarkdown(src) {
   let s = escapeHtml(String(src ?? ''));
   s = linkify(s);
-  s = s.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+  s = s.replace(/```(\w+)?\n?([\s\S]*?)```/g, (m, lang, code) => buildCodeBlock(code.trim(), lang));
   s = s.replace(/`([^`]+)`/g, '<code>$1</code>');
   s = s.replace(/^### (.*)$/gm, '<h4>$1</h4>');
   s = s.replace(/^## (.*)$/gm, '<h3>$1</h3>');
@@ -1379,9 +1861,51 @@ window.showToast = showToast;
 function toggleSection(h) { h.classList.toggle('open'); h.nextElementSibling.classList.toggle('open'); }
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); }
-function toggleTopProfileMenu(e) { e.stopPropagation(); document.getElementById('topProfileMenu').classList.toggle('show'); }
-function closeTopProfileMenu() { document.getElementById('topProfileMenu').classList.remove('show'); }
-document.addEventListener('click', e => { if (!e.target.closest('.top-profile-container')) closeTopProfileMenu(); });
+
+// ============ PROFILE MENU ============
+function toggleTopProfileMenu(e) {
+  if (e) { e.stopPropagation(); e.preventDefault(); }
+  const menu = document.getElementById('topProfileMenu');
+  if (!menu) return;
+  menu.classList.toggle('show');
+}
+function closeTopProfileMenu() { 
+  document.getElementById('topProfileMenu')?.classList.remove('show'); 
+}
+window.toggleTopProfileMenu = toggleTopProfileMenu;
+window.closeTopProfileMenu = closeTopProfileMenu;
+
+function setupProfileButton() {
+  const avatar = document.getElementById('topProfileAvatar');
+  const menu = document.getElementById('topProfileMenu');
+  if (!avatar || !menu) { setTimeout(setupProfileButton, 300); return; }
+  if (avatar._wkBound) return;
+  avatar._wkBound = true;
+  
+  function toggleMenu(e) {
+    if (e) { e.preventDefault(); e.stopPropagation(); }
+    menu.classList.toggle('show');
+  }
+  
+  avatar.addEventListener('click', toggleMenu, false);
+  avatar.addEventListener('touchend', function(e) { e.preventDefault(); toggleMenu(e); }, { passive: false });
+  avatar.addEventListener('touchstart', function(e) { e.stopPropagation(); }, { passive: true });
+  
+  document.addEventListener('click', function(e) {
+    if (!menu.classList.contains('show')) return;
+    if (e.target.closest('#topProfileMenu')) return;
+    if (e.target === avatar || avatar.contains(e.target)) return;
+    closeTopProfileMenu();
+  }, true);
+  document.addEventListener('touchstart', function(e) {
+    if (!menu.classList.contains('show')) return;
+    if (e.target.closest('#topProfileMenu')) return;
+    if (e.target === avatar || avatar.contains(e.target)) return;
+    closeTopProfileMenu();
+  }, { passive: true });
+}
+
+// ============ AVATAR ============
 function applyAvatar(data) { ['sidebarAvatar','settingsAvatar','topProfileAvatar','pmAvatar'].forEach(id => { const el = document.getElementById(id); if (el) { if (data.startsWith('http') || data.startsWith('data:')) el.innerHTML = `<img src="${data}">`; else el.textContent = data; } }); }
 function handleProfilePhotoUpload(e) { const f = e.target.files[0]; if (!f) return; const fr = new FileReader(); fr.onload = ev => { localStorage.setItem('wk_user_avatar', ev.target.result); applyAvatar(ev.target.result); showToast('Photo updated'); }; fr.readAsDataURL(f); }
 
@@ -1393,7 +1917,13 @@ function saveSettings() {
   const s = document.getElementById('sunoKeyInput').value.trim(); if (s) localStorage.setItem('wk_suno_key', s); else localStorage.removeItem('wk_suno_key'); 
   const m = document.getElementById('modelSelect').value; localStorage.setItem('wk_model', m); updateModelBadge(); closeModal('settingsModal'); showToast('✅ Saved'); 
 }
-function updateModelBadge() { const m = localStorage.getItem('wk_model') || 'gemini-3.5-flash-lite'; let label = 'Gemini 3.5 Flash-lite'; if (m.includes('3.1-flash')) label = 'Gemini 3.1 Flash'; else if (m.includes('2.5-flash')) label = 'Gemini 2.5 Flash'; document.getElementById('modelBadgeText').textContent = label; }
+function updateModelBadge() { 
+  const m = localStorage.getItem('wk_model') || 'gemini-2.5-flash'; 
+  let label = 'Gemini 2.5 Flash'; 
+  if (m.includes('3.5-flash-lite')) label = 'Gemini 3.5 Flash-Lite'; 
+  else if (m.includes('3.5-flash')) label = 'Gemini 3.5 Flash'; 
+  document.getElementById('modelBadgeText').textContent = label; 
+}
 function applyTheme(color) { document.documentElement.style.setProperty('--accent', color); document.querySelectorAll('.theme-swatch').forEach(s => s.classList.toggle('active', s.dataset.color === color)); }
 function toggleLightMode() { document.body.classList.toggle('light-mode'); const isLight = document.body.classList.contains('light-mode'); localStorage.setItem('wk_light_mode', isLight ? '1' : '0'); document.getElementById('lightModeToggle')?.classList.toggle('on', isLight); showToast(isLight ? '☀️ Light Mode' : '🌙 Dark Mode'); }
 function loadTheme() { if (localStorage.getItem('wk_light_mode') === '1') { document.body.classList.add('light-mode'); document.getElementById('lightModeToggle')?.classList.add('on'); } }
@@ -1417,8 +1947,8 @@ function toggleVoiceMode() {
   if (voiceMode) { box.classList.add('voice-mode'); if (micIcon) micIcon.className = 'fas fa-keyboard'; showToast('🎙️ Voice mode'); }
   else { box.classList.remove('voice-mode'); if (micIcon) micIcon.className = 'fas fa-microphone'; setTimeout(() => document.getElementById('messageInput').focus(), 100); showToast('⌨️ Keyboard mode'); }
 }
-
-// ============ VOICE RECOGNITION (Multi-Language) ============
+  
+// ============ VOICE RECOGNITION ============
 const VOICE_LANGS = {
   'en-NG': '🇳🇬 English (Nigeria)', 'en-US': '🇺🇸 English (US)', 'en-GB': '🇬🇧 English (UK)',
   'ha-NG': '🇳🇬 Hausa', 'ar-SA': '🇸🇦 Arabic', 'fr-FR': '🇫🇷 French',
@@ -1492,7 +2022,7 @@ function initHoldToSpeak() {
         showToast('✅ Captured');
       } else showToast('Did not catch that — try again');
       finalText = ''; interimText = ''; recognition = null;
-    }, 500);
+    }, 600);
   };
 
   pill.addEventListener('mousedown', startRec);
@@ -1500,9 +2030,9 @@ function initHoldToSpeak() {
   pill.addEventListener('mouseleave', stopRec);
   pill.addEventListener('touchstart', startRec, {passive:false});
   pill.addEventListener('touchend', stopRec, {passive:false});
-  pill.addEventListener('touchcancel', stopRec, {passive:false});
-}
-
+  pill.addEventListener('touchcancel', stopRec, {passive:false});  
+}  
+  
 // ============ VAULT ============
 function loadVault() { try { vaultMemories = JSON.parse(localStorage.getItem('wk_vault') || '[]'); } catch(e) { vaultMemories = []; } updateVaultBadge(); }
 function saveVault() { localStorage.setItem('wk_vault', JSON.stringify(vaultMemories)); updateVaultBadge(); if (window.WK_CLOUD && localStorage.getItem('wk_user_uid')) window.WK_CLOUD.saveUserData(localStorage.getItem('wk_user_uid'), { vault: vaultMemories }); }
@@ -1574,7 +2104,6 @@ async function promptInstallApp() { if (!deferredInstallPrompt) { showToast('Men
 // ============ UNIVERSAL DOWNLOAD ============
 async function downloadFile(url, filename) {
   try {
-    // Try fetch + blob for direct download (works best on mobile)
     const response = await fetch(url, { mode: 'cors' });
     if (!response.ok) throw new Error('Fetch failed');
     const blob = await response.blob();
@@ -1586,7 +2115,6 @@ async function downloadFile(url, filename) {
     showToast('✅ Downloaded to your phone!');
     return true;
   } catch (err) {
-    // Fallback: open in new tab (user can long-press to save)
     const a = document.createElement('a');
     a.href = url; a.download = filename || 'wiseking-download'; a.target = '_blank';
     a.rel = 'noopener';
@@ -1597,7 +2125,33 @@ async function downloadFile(url, filename) {
 }
 window.downloadFile = downloadFile;
 
-// ============ IMAGES / VIDEOS / SEARCH / BUILD PANELS ============
+function downloadText(encodedText, filename) {
+  try {
+    const text = decodeURIComponent(encodedText);
+    const blob = new Blob([text], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    showToast('✅ Downloaded!');
+  } catch(e) { showToast('⚠️ Download failed'); }
+}
+window.downloadText = downloadText;
+
+// ============ PRICING PANEL ============
+function openPricingPanel() { document.getElementById('pricingPanel').classList.add('show'); closeSidebar(); }
+function closePricingPanel() { document.getElementById('pricingPanel').classList.remove('show'); }
+function upgradeToPlan(plan, amount) {
+  showToast(`🚀 ${plan} plan — ₦${amount.toLocaleString()}/month`);
+  setTimeout(() => {
+    alert(`✅ DEMO MODE\n\nPlan: ${plan}\nPrice: ₦${amount.toLocaleString()}/month\n\nTo enable real payments:\n1. Sign up at paystack.com\n2. Get your public key\n3. Contact developer to integrate`);
+  }, 500);
+}
+window.openPricingPanel = openPricingPanel;
+window.closePricingPanel = closePricingPanel;
+window.upgradeToPlan = upgradeToPlan;
+
+// ============ IMAGES / VIDEOS ============
 function openImagesPanel() { document.getElementById('imagesPanel').classList.add('show'); closeSidebar(); updateReplicateStatus(); }
 function closeImagesPanel() { document.getElementById('imagesPanel').classList.remove('show'); }
 function openVideosPanel() { document.getElementById('videosPanel').classList.add('show'); closeSidebar(); }
@@ -1640,6 +2194,7 @@ async function generateImageFromPanel() {
 window.generateImageFromPanel = generateImageFromPanel;
 
 function shareImageUrl(url) { currentShareTarget = { type: 'image', text: `Check out this AI image: ${url}` }; openSharePopup(); }
+window.shareImageUrl = shareImageUrl;
 
 async function generateVideoFromPanel() {
   const prompt = document.getElementById('videosPromptInput').value.trim();
@@ -1654,19 +2209,6 @@ async function generateVideoFromPanel() {
   } else results.innerHTML = `<div class="result-card"><p>⚠️ Failed. Try again.</p></div>`;
 }
 window.generateVideoFromPanel = generateVideoFromPanel;
-
-function downloadText(encodedText, filename) {
-  try {
-    const text = decodeURIComponent(encodedText);
-    const blob = new Blob([text], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = filename;
-    document.body.appendChild(a); a.click(); document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    showToast('✅ Downloaded!');
-  } catch(e) { showToast('⚠️ Download failed'); }
-}
-window.downloadText = downloadText;
 
 function updateReplicateStatus() { const el = document.getElementById('replicateStatus'); if (!el) return; const key = localStorage.getItem('wk_replicate_key'); el.textContent = key ? '✅ Replicate connected' : '💡 Add Replicate key for hyper-real images.'; }
 
@@ -1693,6 +2235,7 @@ function renderMusicLibrary() {
 window.renderMusicLibrary = renderMusicLibrary;
 
 function deleteMusicItem(i) { musicLibrary.splice(i, 1); saveMusic(); renderMusicLibrary(); showToast('Removed'); }
+window.deleteMusicItem = deleteMusicItem;
 
 async function generateMusicFromPanel() {
   const input = document.getElementById('musicInput').value.trim();
@@ -1831,7 +2374,6 @@ async function askPdfQuestion() {
 }
 window.askPdfQuestion = askPdfQuestion;
 
-// PDF Drag & drop
 const pdfDZ = document.getElementById('pdfDropzone');
 if (pdfDZ) {
   ['dragenter','dragover'].forEach(ev => pdfDZ.addEventListener(ev, e => { e.preventDefault(); pdfDZ.classList.add('dragover'); }));
@@ -1847,7 +2389,6 @@ function swapLanguages() {
   if (from.value === 'auto') { showToast('Cannot swap auto-detect'); return; }
   const t = from.value; from.value = to.value; to.value = t;
   const input = document.getElementById('translateInput').value;
-  const resultDiv = document.getElementById('translateResults');
   if (input) doTranslate();
 }
 window.swapLanguages = swapLanguages;
@@ -1872,7 +2413,6 @@ async function doTranslate() {
   const prompt = `Translate the following text ${from === 'auto' ? 'from its original language' : `from ${fromName}`} into ${toName}. Provide ONLY the translation, no explanations. Preserve tone, emotion and naturalness.\n\nTEXT:\n${text}`;
   const res = await sendMessageWithFallback(prompt);
   if (res.success) {
-    const safeTranslation = res.reply.replace(/"/g, '&quot;');
     results.innerHTML = `
       <div class="result-card">
         <h4>🌍 ${fromName} → ${toName}</h4>
@@ -2036,8 +2576,6 @@ function analyzeTable(rows, name) {
   }
 
   results.innerHTML = `<div class="result-card"><h4>✅ ${escapeHtml(name)}</h4></div>` + statsHtml + statsTable + chartHtml + `<div id="dataAIInsights"></div>`;
-
-  // AI insights
   aiDataInsight(headers, data, numericCols);
 }
 
@@ -2052,7 +2590,6 @@ async function aiDataInsight(headers, data, numericCols) {
   else box.innerHTML = `<div class="result-card"><p>⚠️ Insights failed.</p></div>`;
 }
 
-// Data dropzone
 const dataDZ = document.getElementById('dataDropzone');
 if (dataDZ) {
   ['dragenter','dragover'].forEach(ev => dataDZ.addEventListener(ev, e => { e.preventDefault(); dataDZ.classList.add('dragover'); }));
@@ -2070,13 +2607,9 @@ function renderDownloadHub() {
   const grid = document.getElementById('downloadHubGrid'); if (!grid) return;
   let items = [...library];
   if (currentDownloadFilter !== 'all') items = items.filter(i => i.type === currentDownloadFilter);
-  
-  // Also add music
   const musicItems = musicLibrary.map(m => ({ type: 'music', title: m.title, prompt: m.prompt, audioUrl: m.audioUrl, createdAt: m.createdAt }));
   if (currentDownloadFilter === 'all' || currentDownloadFilter === 'music' || currentDownloadFilter === 'audio') items = [...musicItems, ...items];
-  
   if (!items.length) { grid.innerHTML = '<div class="result-card" style="grid-column:1/-1"><p>Nothing here yet. Create images, videos, or music first!</p></div>'; return; }
-  
   grid.innerHTML = items.map((item, idx) => {
     const isImage = item.type === 'image';
     const isMusic = item.type === 'music';
@@ -2095,9 +2628,10 @@ function renderDownloadHub() {
   }).join('');
 }
 
-// ============ SEARCH WEB / BUILD APP ============
+// ============ SEARCH WEB PANEL ============
 function openSearchWebPanel() { document.getElementById('searchWebPanel').classList.add('show'); closeSidebar(); renderSearchSuggestions(); }
 function closeSearchWebPanel() { document.getElementById('searchWebPanel').classList.remove('show'); }
+
 function renderSearchSuggestions() {
   const box = document.getElementById('searchSuggestionsBox'); if (!box) return;
   const suggestions = [
@@ -2106,12 +2640,21 @@ function renderSearchSuggestions() {
     { label: '🤖 Latest AI news 2026', url: 'https://www.google.com/search?q=latest+AI+news+2026', icon: 'fa-google', cls: 'google' },
     { label: '🌦️ Weather in Lagos', url: 'https://www.google.com/search?q=weather+in+lagos', icon: 'fa-google', cls: 'google' },
     { label: '📈 Crypto prices', url: 'https://www.google.com/search?q=crypto+prices+today', icon: 'fa-google', cls: 'google' },
+    { label: '📧 Gmail', url: 'https://mail.google.com', icon: 'fa-envelope', cls: 'gmail' },
+    { label: '🎬 Netflix', url: 'https://www.netflix.com', icon: 'fa-film', cls: 'netflix' },
+    { label: '🛒 Jumia', url: 'https://www.jumia.com.ng', icon: 'fa-shopping-cart', cls: 'jumia' },
+    { label: '📸 Instagram', url: 'https://instagram.com', icon: 'fa-instagram', cls: 'instagram' },
+    { label: '🐦 Twitter/X', url: 'https://twitter.com', icon: 'fa-x-twitter', cls: 'twitter' },
+    { label: '💬 WhatsApp', url: 'https://web.whatsapp.com', icon: 'fa-whatsapp', cls: 'whatsapp' },
+    { label: '🎵 Spotify', url: 'https://open.spotify.com', icon: 'fa-spotify', cls: 'spotify' },
+    { label: '📚 Quran', url: 'https://quran.com', icon: 'fa-book-quran', cls: 'wiki' },
     { label: '📖 Wikipedia', url: 'https://en.wikipedia.org', icon: 'fa-wikipedia-w', cls: 'wiki' },
     { label: '▶️ YouTube', url: 'https://www.youtube.com', icon: 'fa-youtube', cls: 'youtube' },
     { label: '📺 BBC News', url: 'https://www.bbc.com/news', icon: 'fa-tower-broadcast', cls: 'bbc' }
   ];
   box.innerHTML = suggestions.map(s => `<a class="quick-chip ${s.cls}" href="${s.url}" target="_blank" rel="noopener"><i class="fab ${s.icon}"></i> ${s.label}</a>`).join('');
 }
+
 async function doSearchWeb(query) {
   const results = document.getElementById('searchWebResults');
   const shortcut = document.getElementById('askWiseKingShortcut');
@@ -2131,6 +2674,7 @@ window.doSearchWeb = doSearchWeb;
 function askWiseKingFromSearch(q) { closeSearchWebPanel(); insertQuickPrompt(q); }
 window.askWiseKingFromSearch = askWiseKingFromSearch;
 
+// ============ BUILD APP ============
 const BUILD_IDEAS = [ { t:'Business Landing Page', d:'Modern responsive landing' }, { t:'Portfolio Website', d:'Showcase your work' }, { t:'Restaurant Menu App', d:'Digital menu with cart' }, { t:'Todo List App', d:'Track daily tasks' }, { t:'Weather Dashboard', d:'Live weather API' }, { t:'E-commerce Store', d:'Full online shop' }, { t:'Chat Application', d:'Real-time messaging' } ];
 function openBuildAppPanel() { document.getElementById('buildAppPanel').classList.add('show'); closeSidebar(); filterBuildIdeas(''); }
 function closeBuildAppPanel() { document.getElementById('buildAppPanel').classList.remove('show'); }
@@ -2191,20 +2735,19 @@ function buildMessageEl(msg, idx, chatId) {
   if (!isThinking) {
     const actionBar = document.createElement('div'); actionBar.className = 'msg-action-bar';
     if (isAI) {
-      actionBar.innerHTML = `
-        <button class="msg-action-btn ${msg.feedback === 'up' ? 'active' : ''}" onclick="handleLikeMessage(${idx})"><i class="fas fa-thumbs-up"></i></button>
-        <button class="msg-action-btn ${msg.feedback === 'down' ? 'active' : ''}" onclick="handleDislikeMessage(${idx})"><i class="fas fa-thumbs-down"></i></button>
-        <button class="msg-action-btn" onclick="handleCopyMessage(${idx})"><i class="fas fa-copy"></i> Copy</button>
-        <button class="msg-action-btn" onclick="handleRegenerateMessage('${chatId}', ${idx})"><i class="fas fa-sync-alt"></i></button>
-        <button class="msg-action-btn" onclick="handleShareMessage(${idx})"><i class="fas fa-share"></i></button>
-        <button class="msg-action-btn" onclick="downloadText('${encodeURIComponent((msg.content||'').slice(0,9000))}', 'wiseking-response-${idx}.txt')"><i class="fas fa-download"></i></button>
-      `;
-    } else {
-      actionBar.innerHTML = `
-        <button class="msg-action-btn" onclick="handleEditMessage(${idx})"><i class="fas fa-pen"></i></button>
-        <button class="msg-action-btn" onclick="handleCopyMessage(${idx})"><i class="fas fa-copy"></i></button>
-        <button class="msg-action-btn danger" onclick="handleDeleteMessage(${idx})"><i class="fas fa-trash"></i></button>
-      `;
+      let sourcesHtml = '';
+      if (msg.sources && msg.sources.length > 0) {
+       sourcesHtml = `<div class="search-sources-badge" onclick="showSourcesPanel(${idx})"><i class="fas fa-globe"></i> ${msg.sources.length} web page${msg.sources.length > 1 ? 's' : ''}</div>`;
+     }
+     actionBar.innerHTML = `
+       ${sourcesHtml}
+       <button class="msg-action-btn ${msg.feedback === 'up' ? 'active' : ''}" onclick="handleLikeMessage(${idx})"><i class="fas fa-thumbs-up"></i></button>
+       <button class="msg-action-btn ${msg.feedback === 'down' ? 'active' : ''}" onclick="handleDislikeMessage(${idx})"><i class="fas fa-thumbs-down"></i></button>
+       <button class="msg-action-btn" onclick="handleCopyMessage(${idx})"><i class="fas fa-copy"></i> Copy</button>
+       <button class="msg-action-btn" onclick="handleRegenerateMessage('${chatId}', ${idx})"><i class="fas fa-sync-alt"></i></button>
+       <button class="msg-action-btn" onclick="handleShareMessage(${idx})"><i class="fas fa-share"></i></button>
+       <button class="msg-action-btn" onclick="downloadText('${encodeURIComponent((msg.content||'').slice(0,9000))}', 'wiseking-response-${idx}.txt')"><i class="fas fa-download"></i></button>
+     `;
     }
     body.appendChild(actionBar);
   }
@@ -2214,7 +2757,7 @@ function buildMessageEl(msg, idx, chatId) {
 
 function handleLikeMessage(idx) { const chat = chats.find(c => c.id === activeChatId); if (!chat || !chat.messages[idx]) return; chat.messages[idx].feedback = 'up'; saveChats(); renderMessages(); showToast('Thank you! ✅'); }
 function handleDislikeMessage(idx) { const chat = chats.find(c => c.id === activeChatId); if (!chat || !chat.messages[idx]) return; chat.messages[idx].feedback = 'down'; saveChats(); renderMessages(); document.getElementById('dislikeFeedbackInput').value = ''; document.getElementById('dislikeModal').classList.add('show'); }
-function submitDislikeFeedback() { closeModal('dislikeModal'); showToast('👎 Noted. Thank you!'); }
+function submitDislikeFeedback() { closeModal('dislikeModal'); showToast('👎 Noted. Feedback Submitted!'); }
 function handleRegenerateMessage(chatId, msgIdx) { const chat = chats.find(c => c.id === chatId); if (!chat || isSending) return; let uIdx = -1; for (let i = msgIdx - 1; i >= 0; i--) { if (chat.messages[i].role === 'user') { uIdx = i; break; } } if (uIdx === -1) return; const userMsg = chat.messages[uIdx]; chat.messages.splice(msgIdx, 1); saveChats(); renderMessages(); triggerResponse(chat, userMsg); }
 function handleCopyMessage(idx) { const chat = chats.find(c => c.id === activeChatId); if (!chat || !chat.messages[idx]) return; const text = chat.messages[idx].content || ''; if (!text) return showToast('Nothing to copy'); wkCopyToClipboard(text).then(ok => showToast(ok ? '📋 Copied!' : '⚠️ Failed')); }
 function handleShareMessage(idx) { const chat = chats.find(c => c.id === activeChatId); if (!chat || !chat.messages[idx]) return; currentShareTarget = { type: 'message', text: chat.messages[idx].content || '' }; openSharePopup(); }
@@ -2227,11 +2770,39 @@ function wkCopyToClipboard(text) { return new Promise((resolve) => { try { if (n
 window.wkCopyToClipboard = wkCopyToClipboard;
 function fallbackCopy(text) { try { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.top = '-1000px'; document.body.appendChild(ta); ta.select(); const ok = document.execCommand('copy'); ta.remove(); return !!ok; } catch (e) { return false; } }
 
-// ============ AI RESPONSE ============
+// ============ WORKING WEB SEARCH (Free, no API key needed) ============
+async function fetchWebSearch(query) {
+  try {
+    const res = await fetch(`https://text.pollinations.ai/search?q=${encodeURIComponent(query)}`);
+    if (!res.ok) return null;
+    const text = await res.text();
+    return text.slice(0, 3000);
+  } catch (e) { return null; }
+}
+
 async function sendMessageWithFallback(userText, chatHistory = [], signal = null) {
   const apiKey = (localStorage.getItem('wk_api_key') || '').trim() || ENV_GEMINI_KEY;
-  const model = localStorage.getItem('wk_model') || 'gemini-3.5-flash-lite';
+  const model = localStorage.getItem('wk_model') || 'gemini-2.5-flash';
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+
+  // Detect if user is asking for live info (news, weather, today, latest, etc.)
+  const liveKeywords = /\b(news|latest|today|now|current|weather|price|rate|score|match|update|2025|2026)\b/i;
+  let searchContext = '';
+  if (liveKeywords.test(userText)) {
+    const results = await fetchWebSearch(userText);
+    if (results) {
+      searchContext = `\n\n[LIVE WEB SEARCH RESULTS — use these to answer accurately]:\n${results}\n[END OF SEARCH RESULTS]\n`;
+    }
+  }
+
+  const now = new Date();
+  const dateTimeString = now.toLocaleString('en-NG', { 
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', 
+    hour: '2-digit', minute: '2-digit', hour12: true 
+  });
+
+  const finalPrompt = `[SYSTEM: Today is ${dateTimeString}.]${searchContext}\n\nUser: ${userText}`;
+
   let attempts = 0;
   while (attempts < 3) {
     attempts++;
@@ -2239,28 +2810,44 @@ async function sendMessageWithFallback(userText, chatHistory = [], signal = null
       const requestBody = {
         systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
         contents: [
-          ...chatHistory.map(m => ({ role: m.role === "user" ? "user" : "model", parts: [{ text: m.content }] })),
-          { role: "user", parts: [{ text: userText }] }
+          ...chatHistory.slice(-8).map(m => ({ 
+            role: m.role === "user" ? "user" : "model", 
+            parts: [{ text: m.content || '' }] 
+          })),
+          { role: "user", parts: [{ text: finalPrompt }] }
         ]
       };
-      const fetchOpts = { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(requestBody) };
+      const fetchOpts = { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify(requestBody) 
+      };
       if (signal) fetchOpts.signal = signal;
       const response = await fetch(url, fetchOpts);
       if (!response.ok) {
-        if (response.status === 429 || response.status >= 500) { await new Promise(r => setTimeout(r, 1000 * attempts)); continue; }
+        if (response.status === 429 || response.status >= 500) { 
+          await new Promise(r => setTimeout(r, 800 * attempts)); 
+          continue; 
+        }
         throw new Error(`HTTP ${response.status}`);
       }
       const data = await response.json();
-      let reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
       if (!reply) throw new Error("Empty reply");
-      return { success: true, provider: "Gemini", reply };
+      return { success: true, reply, usedSearch: !!searchContext };
     } catch (err) {
       if (err.name === 'AbortError') throw err;
-      if (attempts >= 3) return { success: true, provider: "WiseKingCloud", reply: `Ranka ya dade, I received: "${userText}". Let's continue! 👑🚀` };
+      if (attempts >= 3) {
+        return { 
+          success: true, 
+          reply: `Ranka ya dade! I received your message: "${userText}". Let me know how I can help! 👑`,
+          usedSearch: false
+        };
+      }
       await new Promise(r => setTimeout(r, 800));
     }
   }
-}
+}  
 window.sendMessageWithFallback = sendMessageWithFallback;
 
 async function triggerResponse(chat, userMsg) {
@@ -2271,14 +2858,33 @@ async function triggerResponse(chat, userMsg) {
   const aiMsg = { role:'ai', content:'', createdAt: Date.now(), streaming: true };
   chat.messages.push(aiMsg); renderMessages();
   try {
-    const result = await sendMessageWithFallback(userMsg.content, chat.messages.filter(m => m !== aiMsg), currentAbortController.signal);
-    if (result.success) aiMsg.content = result.reply;
-    else { aiMsg.error = true; aiMsg.content = result.error || '⚠️ Service busy.'; }
-  } catch (err) { if (err.name !== 'AbortError') { aiMsg.error = true; aiMsg.content = aiMsg.content || '⚠️ Connection error.'; } }
-  aiMsg.streaming = false; isSending = false; currentAbortController = null;
-  btn.classList.remove('stop'); btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
-  handleInputChange(); saveChats(); renderMessages();
+    const recentHistory = chat.messages.filter(m => m !== aiMsg).slice(-10);
+    const result = await sendMessageWithFallback(userMsg.content, recentHistory, currentAbortController.signal);
+    if (result.success && result.reply && result.reply.trim().length > 0) {
+      aiMsg.content = result.reply;
+      aiMsg.usedSearch = result.usedSearch || false;
+    } else {
+      aiMsg.error = true;
+      aiMsg.content = '⚠️ No response. Please try again.';
+    }
+  } catch (err) {
+    if (err.name !== 'AbortError') {
+      aiMsg.error = true;
+      aiMsg.content = aiMsg.content || '⚠️ Connection error. Please try again.';
+    }
+  } finally {
+    aiMsg.streaming = false;
+    isSending = false;
+    currentAbortController = null;
+    btn.classList.remove('stop');
+    btn.classList.add('hidden');
+    btn.innerHTML = '<i class="fas fa-arrow-up"></i>';
+    handleInputChange();
+    saveChats();
+    renderMessages();
+  }
 }
+window.triggerResponse = triggerResponse;
 
 // ============ CHAT SEARCH ============
 function toggleChatSearch() {
@@ -2291,7 +2897,44 @@ function toggleChatSearch() {
   }
 }
 window.toggleChatSearch = toggleChatSearch;
-
+    
+// ============ SEARCH SOURCES DISPLAY ============
+function showSourcesPanel(msgIdx) {
+  const chat = chats.find(c => c.id === activeChatId);
+  if (!chat || !chat.messages[msgIdx] || !chat.messages[msgIdx].sources) return;
+  const sources = chat.messages[msgIdx].sources;
+  
+  const modal = document.createElement('div');
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.75);backdrop-filter:blur(8px);z-index:99999;display:flex;align-items:flex-end;justify-content:center;padding:0';
+  modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+  
+  const sheet = document.createElement('div');
+  sheet.style.cssText = 'background:var(--bg-secondary);border-radius:24px 24px 0 0;width:100%;max-width:600px;max-height:70vh;overflow-y:auto;padding:20px;box-shadow:0 -10px 40px rgba(0,0,0,0.6);animation:slideUp 0.3s';
+  
+  let html = `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div style="font-size:16px;font-weight:700"><i class="fas fa-globe" style="color:var(--accent)"></i> Web Sources</div>
+    <button onclick="this.closest('div').parentElement.remove()" style="background:transparent;border:none;color:var(--text-secondary);font-size:20px;cursor:pointer"><i class="fas fa-times"></i></button>
+  </div>`;
+  
+  sources.forEach((s, i) => {
+    let domain = '';
+    try { domain = new URL(s.url).hostname.replace('www.', ''); } catch(e) { domain = 'link'; }
+    html += `<a href="${s.url}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-elevated);border:1px solid var(--border-subtle);border-radius:12px;margin-bottom:8px;text-decoration:none;color:var(--text-primary)">
+      <div style="width:32px;height:32px;border-radius:8px;background:var(--accent-gradient);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:white;flex-shrink:0">${i+1}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(s.title)}</div>
+        <div style="font-size:11.5px;color:var(--accent-hover);margin-top:2px">${escapeHtml(domain)}</div>
+      </div>
+      <i class="fas fa-external-link-alt" style="color:var(--text-tertiary);font-size:12px"></i>
+    </a>`;
+  });
+  
+  sheet.innerHTML = html;
+  modal.appendChild(sheet);
+  document.body.appendChild(modal);
+}
+window.showSourcesPanel = showSourcesPanel;
+  
 // ============ INIT ============
 function init() {
   try {
@@ -2308,9 +2951,9 @@ function init() {
     setStreamingEnabled(getStreamingEnabled());
     updateModelBadge(); handleInputChange(); updateReplicateStatus();
     initHoldToSpeak();
+    setupProfileButton();
     if (typeof pdfjsLib !== 'undefined') pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     if (localStorage.getItem('wk_guest_mode') === '1') unlockApp('Guest', 'Guest Mode (not synced)', null);
-    // Load voice lang from localStorage
     currentVoiceLang = localStorage.getItem('wk_voice_lang') || 'en-NG';
   } catch(e){ console.warn('Init error', e); }
 }
@@ -2319,6 +2962,8 @@ document.querySelectorAll('.modal-bg').forEach(m => { m.addEventListener('click'
 document.getElementById('sharePopup')?.addEventListener('click', (e) => { if (e.target.id === 'sharePopup') closeSharePopup(); });
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
 else init();
+setTimeout(setupProfileButton, 500);
+setTimeout(setupProfileButton, 1500);
 
 // ============ EXPOSE GLOBAL FUNCTIONS ============
 Object.assign(window, {
@@ -2328,7 +2973,8 @@ Object.assign(window, {
   openSearchWebPanel, closeSearchWebPanel, openBuildAppPanel, closeBuildAppPanel,
   openMusicPanel, closeMusicPanel, openPdfChatPanel, closePdfChatPanel,
   openTranslatePanel, closeTranslatePanel, openDataAnalysisPanel, closeDataAnalysisPanel,
-  openDownloadHub, closeDownloadHub, renderVideoGallery, renderLibrary, renderProjects,
+  openDownloadHub, closeDownloadHub, openPricingPanel, closePricingPanel, upgradeToPlan,
+  renderVideoGallery, renderLibrary, renderProjects,
   createNewProject, deleteVaultMemory, deleteMemoryItem, extractMemoryNow,
   handleLikeMessage, handleDislikeMessage, submitDislikeFeedback, handleRegenerateMessage,
   handleCopyMessage, handleShareMessage, handleEditMessage, handleDeleteMessage,
